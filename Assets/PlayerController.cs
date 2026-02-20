@@ -2,44 +2,23 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    bool hasActedThisTurn = false;
+    [SerializeField] private TurnManager turnManager;
+
+    private bool canInput = false;
 
     void Update()
     {
-        if (TurnManager.Instance.currentTurn != TurnState.PlayerTurn)
-        {
-            return;
-        }
+        if (!canInput) return;
 
-        if (!hasActedThisTurn && Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            hasActedThisTurn = true;
-            ExecuteTurn();
+            Debug.Log("플레이어 행동 실행");
+            turnManager.EndPlayerTurn();
         }
     }
 
-    void ExecuteTurn()
+    public void EnableInput(bool value)
     {
-        Move();
-
-        if (CanAttack())
-        {
-            Attack();
-        }
-        Debug.Log("아군 턴 종료됨");
-        TurnManager.Instance.EndTurn();
-    }
-
-    void Move() { }
-
-    void Attack() { }
-
-    bool CanAttack()
-    {
-        return true;
-    }
-        public void ResetTurn()
-    {
-        hasActedThisTurn = false;
+        canInput = value;
     }
 }
