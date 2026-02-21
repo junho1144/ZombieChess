@@ -8,24 +8,39 @@ public enum PieceType
     Prince, // 왕자 (1~2칸)
     Knight, // 나이트 (1칸 또는 3칸)
     Bishop, // 비숍 (아군 맨해튼 거리 1칸 옆)
-    Rook    // 룩 (상하좌우 무제한)
+    Rook,    // 룩 (상하좌우 무제한)
+    Boss
 }
+
 public class UnitBase : MonoBehaviour
 {
     [Header("기본 스탯 설정")]
     public PieceType pieceType; // 이 캐릭터가 어떤 기물인지 (유니티 인스펙터에서 설정)
     public bool isPlayerTeam;   // 아군인지 적군인지 판별
     public int attackRange = 1; // 기본 공격 사거리
+    public int attackDamage = 1;
 
+
+
+    
     // ★ 체력 관련 변수 추가
-    public int currentHP;
+    
     public int maxHP;
+    public int currentHP;
 
-    [Header("UI 자동 생성 설정")]
+    /*
+    [Header("하트 크기, 위치, 간격")]
     public Sprite heartSprite; // ★ 하트 이미지 딱 1개만 드래그 앤 드롭!
     public float heartSpacing = 1f; // 하트 사이 간격
     public Vector3 healthBarOffset = new Vector3(0, 1f, 0); // 캐릭터 머리 위 오프셋
     public float heartScale = 10f; // 하트 크기
+
+    */
+    Sprite heartSprite; // ★ 하트 이미지 딱 1개만 드래그 앤 드롭!
+    float heartSpacing = 1f; // 하트 사이 간격
+    Vector3 healthBarOffset = new Vector3(0, 6.5f, 0); // 캐릭터 머리 위 오프셋
+    float heartScale = 3f; // 하트 크기
+
     [Header("모션 관련")]
     protected bool isShaking = false;
     public float hitShakeDuration = 0.2f;
@@ -45,8 +60,9 @@ public class UnitBase : MonoBehaviour
     {
         currentGridPos = startPos;
         isPlayerTeam = isPlayer;
-        
 
+        currentHP = maxHP;
+        
         // ★ 1. 내 캐릭터의 스프라이트 렌더러 가져오기
         mainSpriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -107,6 +123,7 @@ public class UnitBase : MonoBehaviour
         {
             switch (pieceType)
             {
+                case PieceType.Boss: return 5;
                 case PieceType.Prince: return 4;
                 case PieceType.Knight: return 3;
                 case PieceType.Bishop: return 2;
@@ -148,7 +165,11 @@ public class UnitBase : MonoBehaviour
 
             case PieceType.Bishop:
                 return IsValidBishopMove(targetPos);
+
+            case PieceType.Boss:
+                return (distX == 0 || distY == 0 || distX == distY) && Mathf.Max(distX, distY) <= 2;
         }
+    
 
         return false;
     }

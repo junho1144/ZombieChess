@@ -26,8 +26,6 @@ public class PlayerController : UnitBase
 
     public override void Initialize(Vector2Int startPos, bool isPlayer)
     {
-        maxHP = 3;
-        currentHP = 3;
         attackRange = 1;
         base.Initialize(startPos, isPlayer);
     }
@@ -385,7 +383,7 @@ public class PlayerController : UnitBase
         transform.position = targetWorld;
 
         // 타격 적용(요구사항: 이 구간에 넣기)
-        target.TakeDamage(1);
+        target.TakeDamage(attackDamage);
 
         if (hitPause > 0f)
             yield return new WaitForSeconds(hitPause);

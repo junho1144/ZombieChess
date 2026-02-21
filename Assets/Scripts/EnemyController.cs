@@ -15,10 +15,23 @@ public class EnemyController : UnitBase
 
     public override void Initialize(Vector2Int startPos, bool isPlayer)
     {
-        if (pieceType == PieceType.Pawn) maxHP = 1;
-        else maxHP = 3;
-
-        currentHP = maxHP;
+        // ★ 기물별 체력 및 대미지 설정
+        if (pieceType == PieceType.Pawn)
+        {
+            
+            attackDamage = 1;
+        }
+        else if (pieceType == PieceType.Boss)
+        {
+                     
+            attackDamage = 2;  // ★ 보스 대미지 2
+        }
+        else
+        {
+            
+            attackDamage = 1;
+        }
+        
         base.Initialize(startPos, isPlayer);
     }
 
@@ -26,6 +39,7 @@ public class EnemyController : UnitBase
     {
         switch (type)
         {
+            case PieceType.Boss: return 5;
             case PieceType.Prince: return 4;
             case PieceType.Knight: return 3;
             case PieceType.Bishop: return 2;
@@ -351,7 +365,7 @@ public class EnemyController : UnitBase
     transform.position = targetWorld;
 
     // 타격 적용(요구사항: 이 구간에 넣기)
-    target.TakeDamage(1);
+    target.TakeDamage(attackDamage);
 
     if (hitPause > 0f)
         yield return new WaitForSeconds(hitPause);

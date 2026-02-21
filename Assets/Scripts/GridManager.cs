@@ -8,6 +8,7 @@ public struct CharacterSpawnInfo
 {
     public GameObject characterPrefab; // 소환할 캐릭터의 종류 (프리팹)
     public Vector2Int spawnPosition;   // 소환할 위치 (행렬 좌표)
+                       // 캐릭터의 체력 (UnitBase의 Initialize에 전달할 값)
 }
 
 public class GridManager : MonoBehaviour
