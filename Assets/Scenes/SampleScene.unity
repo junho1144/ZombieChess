@@ -569,6 +569,7 @@ PrefabInstance:
       propertyPath: playerSpawns.Array.size
       value: 5
       value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawnPositions.Array.size
