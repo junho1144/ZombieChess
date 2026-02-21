@@ -123,6 +123,9 @@ public class EnemyController : UnitBase
 
         if (bestMove != currentGridPos)
         {
+            currentGridPos = bestMove;
+            Vector3 newWorldPos = GridManager.Instance.GetWorldPosition(bestMove.x, bestMove.y);
+            newWorldPos.z = -1f;
             yield return JumpSpinMove(bestMove);
         }
 

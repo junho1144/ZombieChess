@@ -96,8 +96,8 @@ public class PlayerController : UnitBase
                 currentState = ActionState.WaitingToAttack;
                 Debug.Log($"{gameObject.name}: 이동 생략! 공격 대상 타일을 클릭하거나 제자리를 다시 클릭해 행동을 포기하세요.");
                 // ★ 제자리 클릭으로 이동을 생략하고 공격 페이즈가 되면 빨간색으로 표시
+                GridManager.Instance.ClearAllTileHighlights();
                 ShowAttackableTiles(new Color(1f, 0.4f, 0.4f, 1f));
-
             }
             else
             {
@@ -184,10 +184,6 @@ public class PlayerController : UnitBase
             if (doFlip)
             {
                 yRot = Mathf.Lerp(startYRot, targetYRot, t);
-                currentState = ActionState.WaitingToAttack;
-                // ★ 일반 이동 완료 후 공격 페이즈가 되면 빨간색으로 표시
-                ShowAttackableTiles(new Color(1f, 0.4f, 0.4f, 1f));
-                Debug.Log($"{gameObject.name}: 이동 완료! 공격 대상 타일을 클릭하거나 제자리를 클릭하세요.");
             }
             else
             {
@@ -238,40 +234,51 @@ public class PlayerController : UnitBase
         canInput = true;
 
         if (HasEnemyInRange())
+        {
             currentState = ActionState.WaitingToAttack;
+
+            // ✅ 이동 표시 지우고 공격 표시로 전환
+            GridManager.Instance.ClearAllTileHighlights();
+            ShowAttackableTiles(new Color(1f, 0.4f, 0.4f, 1f));
+            Debug.Log($"{gameObject.name}: 이동 완료! 공격 대상 타일을 클릭하거나 제자리를 클릭하세요.");
+        }
         else
+        {
             CompleteAction();
+        }
     }
 
     private void TryAttack(int targetX, int targetY)
     {
         Vector2Int targetPos = new Vector2Int(targetX, targetY);
 
-        if (IsValidAttack(targetPos))
+        // 공격 페이즈에서 제자리 클릭 시 공격 포기
+        if (currentGridPos == targetPos)
         {
-            // ★ 클릭한 타일에 누군가 서 있는지 확인 (TurnManager의 헬퍼 함수 사용)
-            UnitBase targetUnit = TurnManager.Instance.GetUnitAt(targetPos);
+            CompleteAction();
+            return;
+        }
 
-            
+        if (!IsValidAttack(targetPos))
+        {
+            Debug.Log($"{gameObject.name}: 사거리 밖입니다! 다시 클릭하세요.");
+            return;
+        }
 
-            // 해당 타일에 캐릭터가 있고, 그 캐릭터가 적군(!isPlayerTeam)일 때만 공격 실행!
-            if (targetUnit != null && !targetUnit.isPlayerTeam)
-            {
-                Debug.Log($"{gameObject.name}: [{targetX}, {targetY}]의 {targetUnit.name} 공격!");
-                targetUnit.TakeDamage(1);
+        // ★ 클릭한 타일에 누가 있는지 확인
+        UnitBase targetUnit = TurnManager.Instance.GetUnitAt(targetPos);
 
-                // 타격에 성공했을 때만 턴을 넘깁니다.
-                CompleteAction();
-            }
-            else
-            {
-                // 빈 땅이거나 아군이 서 있는 곳을 클릭했을 때
-                Debug.Log($"{gameObject.name}: 해당 타일에는 공격할 적이 없습니다! 빨간색 타일(적)을 누르거나 제자리를 눌러 행동을 종료하세요.");
-            }
+        // 적이 있을 때만 공격 모션 실행
+        if (targetUnit != null && !targetUnit.isPlayerTeam && targetUnit.currentHP > 0)
+        {
+            Debug.Log($"{gameObject.name}: [{targetX}, {targetY}]의 {targetUnit.name} 공격!");
+
+            // ✅ 여기서 코루틴 실행
+            StartCoroutine(AttackEnemy(targetUnit));
         }
         else
         {
-            Debug.Log($"{gameObject.name}: 사거리 밖입니다! 다시 클릭하세요.");
+            Debug.Log($"{gameObject.name}: 해당 타일에는 공격할 적이 없습니다! 빨간색 타일(적)을 누르거나 제자리를 눌러 행동을 종료하세요.");
         }
     }
     private IEnumerator AttackEnemy(UnitBase target)
@@ -463,6 +470,7 @@ public class PlayerController : UnitBase
 
         // 마지막 안전 보정
         transform.position = originWorld;
+        CompleteAction();
     }
     private void CompleteAction()
     {
