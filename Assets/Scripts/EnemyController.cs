@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class EnemyController : UnitBase
 {
-    public float moveDuration = 0.25f;
-    public float jumpHeight = 0.5f;
+    private float moveDuration = 0.25f;
+    private float jumpHeight = 4f;
     private bool facingRight = false;
-    public float squashAmount = 0.75f;
+    private float squashAmount = 0.75f;
     private float squashDuration = 0.035f;
 
 

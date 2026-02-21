@@ -115,8 +115,9 @@ MonoBehaviour:
   heartScale: 0.5
   hitShakeDuration: 0.2
   hitShakeAmount: 0.1
+  shakeRoot: {fileID: 8734516558055602100}
   currentGridPos: {x: 0, y: 0}
   moveDuration: 0.25
   jumpHeight: 0.5
   squashAmount: 0.75
-  visualRoot: {fileID: 0}
+  visualRoot: {fileID: 8734516558055602100}

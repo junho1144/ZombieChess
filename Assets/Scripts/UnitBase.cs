@@ -43,8 +43,9 @@ public class UnitBase : MonoBehaviour
 
     [Header("모션 관련")]
     protected bool isShaking = false;
-    public float hitShakeDuration = 0.2f;
-    public float hitShakeAmount = 0.1f;
+    private float hitShakeDuration = 0.3f;
+    private float hitShakeAmount = 0.7f;
+    private Transform shakeRoot;
 
     // 코드로 자동 생성된 하트들을 담아둘 리스트
     private List<GameObject> heartIcons = new List<GameObject>();
@@ -60,6 +61,10 @@ public class UnitBase : MonoBehaviour
     {
         currentGridPos = startPos;
         isPlayerTeam = isPlayer;
+
+
+        if (shakeRoot == null) shakeRoot = transform;
+
 
         currentHP = maxHP;
         
@@ -267,10 +272,9 @@ public class UnitBase : MonoBehaviour
     private IEnumerator HitShake()
     {
         if (isShaking) yield break;
-
         isShaking = true;
 
-        Vector3 originalPos = transform.position;
+        Vector3 originalLocalPos = shakeRoot.localPosition;
         float time = 0f;
 
         while (time < hitShakeDuration)
@@ -278,12 +282,12 @@ public class UnitBase : MonoBehaviour
             time += Time.deltaTime;
 
             float offsetX = Random.Range(-hitShakeAmount, hitShakeAmount);
-            transform.position = originalPos + new Vector3(offsetX, 0f, 0f);
+            shakeRoot.localPosition = originalLocalPos + new Vector3(offsetX, 0f, 0f);
 
             yield return null;
         }
 
-        transform.position = originalPos;
+        shakeRoot.localPosition = originalLocalPos;
         isShaking = false;
     }
 

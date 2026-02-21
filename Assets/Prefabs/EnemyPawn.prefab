@@ -104,3 +104,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb37816083627c40a53c40bb165e7d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  pieceType: 0
+  isPlayerTeam: 0
+  attackRange: 1
+  currentHP: 0
+  maxHP: 0
+  heartSprite: {fileID: 0}
+  heartSpacing: 1
+  healthBarOffset: {x: 0, y: 1, z: 0}
+  heartScale: 10
+  hitShakeDuration: 0.3
+  hitShakeAmount: 10
+  shakeRoot: {fileID: 0}
+  currentGridPos: {x: 0, y: 0}
+  moveDuration: 0.25
+  jumpHeight: 0.8
+  squashAmount: 0.75
+  visualRoot: {fileID: 1388333673836311326}
