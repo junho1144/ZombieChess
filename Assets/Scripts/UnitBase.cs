@@ -33,13 +33,22 @@ public class UnitBase : MonoBehaviour
     [HideInInspector]
     public Vector2Int currentGridPos; // 현재 좌표
 
+    // ★ 시각적 피드백을 위한 변수 추가
+    protected SpriteRenderer mainSpriteRenderer;
+
     // 초기화 함수 (GridManager가 캐릭터를 스폰할 때 호출)
     public virtual void Initialize(Vector2Int startPos, bool isPlayer)
     {
         currentGridPos = startPos;
         isPlayerTeam = isPlayer;
-        heartSprite = Resources.Load<Sprite>("Heart");
+        
 
+        // ★ 1. 내 캐릭터의 스프라이트 렌더러 가져오기
+        mainSpriteRenderer = GetComponent<SpriteRenderer>();
+
+        
+
+        heartSprite = Resources.Load<Sprite>("Heart");
         // --- 체력바 자동 생성 로직 ---
         if (heartSprite != null && maxHP > 0)
         {
@@ -72,6 +81,36 @@ public class UnitBase : MonoBehaviour
         }
 
         UpdateHealthUI();
+    }
+
+    
+
+    // ★ 턴 시작/종료 시 호출될 하이라이트 함수
+    public void SetHighlight(bool isMyTurn)
+    {
+        
+        if (mainSpriteRenderer != null)
+        {
+            // 내 턴이면 이미지를 어둡게(회색), 턴이 끝나면 원래 색(흰색)으로 복구
+            mainSpriteRenderer.color = isMyTurn ? new Color(1f, 1f, 100/255f, 1f) : Color.white;
+        }
+    }
+
+    // ★ 턴 순서를 결정하기 위한 기물별 우선순위 점수
+    public int TurnPriority
+    {
+        get
+        {
+            switch (pieceType)
+            {
+                case PieceType.Prince: return 4;
+                case PieceType.Knight: return 3;
+                case PieceType.Bishop: return 2;
+                case PieceType.Rook: return 1;
+                case PieceType.Pawn: return 0;
+                default: return 0;
+            }
+        }
     }
 
     // ★ 핵심: 목표 좌표가 이 기물의 이동 규칙에 맞는지 검사하는 함수
@@ -133,12 +172,49 @@ public class UnitBase : MonoBehaviour
         return false;
     }
 
+    
+
     // 공격 사거리 검사 로직 (공통: 1칸)
     public bool IsValidAttack(Vector2Int targetPos)
     {
         int distX = Mathf.Abs(currentGridPos.x - targetPos.x);
         int distY = Mathf.Abs(currentGridPos.y - targetPos.y);
         return (distX + distY) <= attackRange;
+    }
+
+    // ★ 맵 전체를 돌면서 내가 '이동'할 수 있는 타일에 색을 칠합니다.
+    public void ShowMovableTiles(Color highlightColor)
+    {
+        GridManager.Instance.ClearAllTileHighlights();
+        for (int x = 0; x < GridManager.Instance.gridSize; x++)
+        {
+            for (int y = 0; y < GridManager.Instance.gridSize; y++)
+            {
+                Vector2Int pos = new Vector2Int(x, y);
+                if (IsValidMove(pos))
+                {
+                    GridManager.Instance.HighlightTile(pos, highlightColor);
+                }
+            }
+        }
+    }
+
+    // ★ 맵 전체를 돌면서 내가 '공격'할 수 있는 타일에 색을 칠합니다.
+    public void ShowAttackableTiles(Color highlightColor)
+    {
+        GridManager.Instance.ClearAllTileHighlights();
+        for (int x = 0; x < GridManager.Instance.gridSize; x++)
+        {
+            for (int y = 0; y < GridManager.Instance.gridSize; y++)
+            {
+                Vector2Int pos = new Vector2Int(x, y);
+                // 자신의 위치는 공격 범위 하이라이트에서 제외합니다.
+                if (pos != currentGridPos && IsValidAttack(pos))
+                {
+                    GridManager.Instance.HighlightTile(pos, highlightColor);
+                }
+            }
+        }
     }
 
     // 피격 로직 (자식 클래스인 PlayerController와 EnemyController에서 다르게 구현할 예정)

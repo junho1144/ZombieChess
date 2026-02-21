@@ -34,8 +34,22 @@ public class TurnManager : MonoBehaviour
     {
         playerList = players;
         enemyList = enemies;
+
+        // ★ C#의 Sort 기능을 이용해 리스트를 TurnPriority 기준 내림차순 정렬합니다.
+        // (b.TurnPriority.CompareTo(a...) 로 작성해야 숫자가 큰 기물이 리스트의 앞(0번)으로 옵니다.)
+        playerList.Sort((a, b) => b.TurnPriority.CompareTo(a.TurnPriority));
+        enemyList.Sort((a, b) => b.TurnPriority.CompareTo(a.TurnPriority));
+
         currentTurn = 1; // 게임 시작 시 1턴으로 초기화
-        StartPlayerTurn();
+        StartPlayerTurn(); // 기본적으로 아군 선 턴 시작
+
+        /*
+        // (나중에 추가하실 때 참고용 팁입니다!)
+        if (isEnemyFirst)
+            StartCoroutine(EnemyTurnRoutine());
+        else
+            StartPlayerTurn();
+        */
     }
 
     // ★ 기물이 죽었을 때 명단에서 빼주는 함수

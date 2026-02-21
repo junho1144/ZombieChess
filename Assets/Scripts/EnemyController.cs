@@ -94,6 +94,9 @@ public class EnemyController : UnitBase
     {
         Debug.Log($"{gameObject.name}: {target.name} 방향으로 이동 탐색 중...");
 
+        // ★ 적이 이동하기 전에 자신의 이동 가능 타일을 보라색으로 표시합니다.
+        ShowMovableTiles(Color.magenta);
+
         Vector2Int bestMove = currentGridPos;
         int minDistanceToTarget = Mathf.Abs(currentGridPos.x - target.currentGridPos.x) +
                                   Mathf.Abs(currentGridPos.y - target.currentGridPos.y);
@@ -118,6 +121,8 @@ public class EnemyController : UnitBase
             }
         }
 
+        yield return new WaitForSeconds(0.5f);
+
         if (bestMove != currentGridPos)
         {
             currentGridPos = bestMove;
@@ -127,7 +132,8 @@ public class EnemyController : UnitBase
             Debug.Log($"{gameObject.name}: [{bestMove.x}, {bestMove.y}]로 이동 완료!");
         }
 
-        yield return new WaitForSeconds(0.5f);
+        // ★ 이동이 끝났으므로 타일 하이라이트를 모두 끕니다.
+        GridManager.Instance.ClearAllTileHighlights();
     }
 
     private IEnumerator AttackTarget(UnitBase target)

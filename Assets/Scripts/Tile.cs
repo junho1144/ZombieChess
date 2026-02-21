@@ -1,11 +1,40 @@
 using UnityEngine;
-//using UnityEngine.InputSystem; // ★ 유니티의 새로운 입력 시스템 사용
 using UnityEngine.EventSystems;
 
 public class Tile : MonoBehaviour, IPointerClickHandler
 {
     public int gridX;
     public int gridY;
+
+    // ★ 원래 색상을 기억해둘 변수
+    private Color originalColor;
+    private SpriteRenderer spriteRenderer;
+
+    void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    // ★ GridManager가 타일을 처음 깔 때 고유 색상을 지정해줍니다.
+    public void SetOriginalColor(Color color)
+    {
+        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.color = color;
+        originalColor = color;
+    }
+
+    // ★ 원래 색상으로 되돌리기
+    public void ResetColor()
+    {
+        if (spriteRenderer != null) spriteRenderer.color = originalColor;
+    }
+
+    // ★ 타일에 하이라이트 색상 입히기
+    public void SetHighlight(Color highlightColor)
+    {
+        if (spriteRenderer != null) spriteRenderer.color = highlightColor;
+    }
+
 
     // GridManager가 타일을 생성할 때 좌표를 입력해 줄 함수
     public void SetCoordinate(int x, int y)
@@ -33,7 +62,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
             activePlayer.OnTileClicked(gridX, gridY);
         }
 
-        Debug.Log($"클릭한 타일 좌표: [{gridX}, {gridY}]");
+        //Debug.Log($"클릭한 타일 좌표: [{gridX}, {gridY}]");
 
         
     }
