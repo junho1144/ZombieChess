@@ -113,5 +113,13 @@ MonoBehaviour:
   heartSpacing: 0.1
   healthBarOffset: {x: 0, y: 0.6, z: 0}
   heartScale: 0.5
+  hitShakeDuration: 0.3
+  hitShakeAmount: 10
+  shakeRoot: {fileID: 8734516558055602100}
   currentGridPos: {x: 0, y: 0}
   currentState: 0
+  visualRoot: {fileID: 8734516558055602100}
+  moveDuration: 0.25
+  jumpHeight: 2
+  squashAmount: 0.75
+  squashDuration: 0.035

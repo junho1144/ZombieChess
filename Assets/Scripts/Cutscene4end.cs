@@ -1,16 +1,13 @@
 using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 public class Cutscene4end : MonoBehaviour
 {
-    void Start()
+    async void Start()
     {
-        StartCoroutine(PlayCutscene());
-    }
-    IEnumerator PlayCutscene()
-    {
-        yield return new WaitForSeconds(10f);
+        await Task.Delay(8000);
+        Debug.Log("끝");
         SceneManager.LoadScene("StartScene");
     }
 }

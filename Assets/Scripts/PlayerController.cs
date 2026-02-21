@@ -19,10 +19,10 @@ public class PlayerController : UnitBase
     public ActionState currentState = ActionState.Idle;
 
     [SerializeField] private Transform visualRoot;
-    [SerializeField] private float moveDuration = 0.25f;
-    [SerializeField] private float jumpHeight = 0.5f;
-    [SerializeField] private float squashAmount = 0.75f;
-    [SerializeField] private float squashDuration = 0.035f;
+    private float moveDuration = 0.25f;
+    private float jumpHeight = 3f;
+    private float squashAmount = 0.75f;
+    private float squashDuration = 0.035f;
 
     public override void Initialize(Vector2Int startPos, bool isPlayer)
     {
