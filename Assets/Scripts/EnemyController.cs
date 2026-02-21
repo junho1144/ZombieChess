@@ -4,19 +4,20 @@ using System.Collections.Generic;
 
 public class EnemyController : UnitBase
 {
+    public float moveDuration = 0.4f;
+    public float jumpHeight = 0.8f;
+
+    [SerializeField] private Transform visualRoot;
+
     public override void Initialize(Vector2Int startPos, bool isPlayer)
     {
-       
-        // ★ 적 체력: 폰은 1, 나머지는 3 설정
         if (pieceType == PieceType.Pawn) maxHP = 1;
         else maxHP = 3;
 
         currentHP = maxHP;
-
         base.Initialize(startPos, isPlayer);
     }
 
-    // ★ 1. 기물별 우선순위 점수 부여
     private int GetPiecePriority(PieceType type)
     {
         switch (type)
@@ -30,10 +31,10 @@ public class EnemyController : UnitBase
         }
     }
 
-    // ★ 2. 가장 최적의 타겟(거리 우선 -> 우선순위 점수 비교) 찾기
     private UnitBase FindBestTarget()
     {
         List<UnitBase> playerTeam = TurnManager.Instance.GetTeamList(true);
+
         UnitBase bestTarget = null;
         int minDistance = int.MaxValue;
         int bestPriority = -1;
@@ -43,13 +44,13 @@ public class EnemyController : UnitBase
             int dist = Mathf.Abs(currentGridPos.x - player.currentGridPos.x) +
                        Mathf.Abs(currentGridPos.y - player.currentGridPos.y);
 
-            if (dist < minDistance) // 거리가 더 가깝다면 무조건 타겟 변경
+            if (dist < minDistance)
             {
                 minDistance = dist;
                 bestTarget = player;
                 bestPriority = GetPiecePriority(player.pieceType);
             }
-            else if (dist == minDistance) // 거리가 똑같다면 우선순위 비교
+            else if (dist == minDistance)
             {
                 int playerPriority = GetPiecePriority(player.pieceType);
                 if (playerPriority > bestPriority)
@@ -59,44 +60,33 @@ public class EnemyController : UnitBase
                 }
             }
         }
+
         return bestTarget;
     }
 
     public IEnumerator PerformEnemyAction()
     {
-        Debug.Log($"{gameObject.name} ({pieceType}) 행동 계산 시작...");
         yield return new WaitForSeconds(0.5f);
 
         UnitBase targetPlayer = FindBestTarget();
+        if (targetPlayer == null) yield break;
 
-        if (targetPlayer == null)
-        {
-            Debug.Log($"{gameObject.name}: 맵에 아군이 없습니다. 대기.");
-            yield break;
-        }
-
-        // 이미 사거리 내에 있다면 이동 생략
         if (!IsValidAttack(targetPlayer.currentGridPos))
-        {
             yield return MoveTowardsTarget(targetPlayer);
-        }
 
-        // 공격 범위 안에 있으면 실제 타격
         if (IsValidAttack(targetPlayer.currentGridPos))
-        {
             yield return AttackTarget(targetPlayer);
-        }
 
         yield return new WaitForSeconds(0.5f);
     }
 
     private IEnumerator MoveTowardsTarget(UnitBase target)
     {
-        Debug.Log($"{gameObject.name}: {target.name} 방향으로 이동 탐색 중...");
-
         Vector2Int bestMove = currentGridPos;
-        int minDistanceToTarget = Mathf.Abs(currentGridPos.x - target.currentGridPos.x) +
-                                  Mathf.Abs(currentGridPos.y - target.currentGridPos.y);
+
+        int minDistance =
+            Mathf.Abs(currentGridPos.x - target.currentGridPos.x) +
+            Mathf.Abs(currentGridPos.y - target.currentGridPos.y);
 
         for (int x = 0; x < GridManager.Instance.gridSize; x++)
         {
@@ -106,12 +96,13 @@ public class EnemyController : UnitBase
 
                 if (IsValidMove(checkPos))
                 {
-                    int distToTarget = Mathf.Abs(checkPos.x - target.currentGridPos.x) +
-                                       Mathf.Abs(checkPos.y - target.currentGridPos.y);
+                    int dist =
+                        Mathf.Abs(checkPos.x - target.currentGridPos.x) +
+                        Mathf.Abs(checkPos.y - target.currentGridPos.y);
 
-                    if (distToTarget < minDistanceToTarget)
+                    if (dist < minDistance)
                     {
-                        minDistanceToTarget = distToTarget;
+                        minDistance = dist;
                         bestMove = checkPos;
                     }
                 }
@@ -119,21 +110,99 @@ public class EnemyController : UnitBase
         }
 
         if (bestMove != currentGridPos)
+            yield return JumpSpinMove(bestMove);
+
+        yield return new WaitForSeconds(0.3f);
+    }
+
+    private IEnumerator JumpSpinMove(Vector2Int targetPos)
+    {
+        if (visualRoot == null)
+            visualRoot = transform;
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = GridManager.Instance.GetWorldPosition(targetPos.x, targetPos.y);
+        endPos.z = -1f;
+
+        Quaternion startRot = transform.rotation;
+
+        Vector3 originalScale = visualRoot.localScale;
+        Vector3 squashScale = new Vector3(
+            originalScale.x * 1.1f,
+            originalScale.y * 0.75f,
+            originalScale.z
+        );
+
+        float squashDuration = 0.08f;
+        float time = 0f;
+
+        // 1️⃣ 점프 전 스쿼시
+        while (time < squashDuration)
         {
-            currentGridPos = bestMove;
-            Vector3 newWorldPos = GridManager.Instance.GetWorldPosition(bestMove.x, bestMove.y);
-            newWorldPos.z = -1f;
-            transform.position = newWorldPos;
-            Debug.Log($"{gameObject.name}: [{bestMove.x}, {bestMove.y}]로 이동 완료!");
+            time += Time.deltaTime;
+            float t = time / squashDuration;
+            visualRoot.localScale = Vector3.Lerp(originalScale, squashScale, t);
+            yield return null;
         }
 
-        yield return new WaitForSeconds(0.5f);
+        // 2️⃣ 점프 직전 복구
+        time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float t = time / squashDuration;
+            visualRoot.localScale = Vector3.Lerp(squashScale, originalScale, t);
+            yield return null;
+        }
+
+        // 3️⃣ 점프 이동
+        time = 0f;
+        while (time < 1f)
+        {
+            time += Time.deltaTime / moveDuration;
+            float t = Mathf.Clamp01(time);
+
+            Vector3 pos = Vector3.Lerp(startPos, endPos, t);
+            pos.y += Mathf.Sin(t * Mathf.PI) * jumpHeight;
+            transform.position = pos;
+
+            float spin = 360f * t;
+            visualRoot.localRotation = Quaternion.Euler(0f, spin, 0f);
+
+            yield return null;
+        }
+
+        transform.position = endPos;
+        visualRoot.localRotation = Quaternion.identity;
+
+        // 4️⃣ 착지 스쿼시
+        time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float t = time / squashDuration;
+            visualRoot.localScale = Vector3.Lerp(originalScale, squashScale, t);
+            yield return null;
+        }
+
+        // 5️⃣ 착지 후 복구
+        time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float t = time / squashDuration;
+            visualRoot.localScale = Vector3.Lerp(squashScale, originalScale, t);
+            yield return null;
+        }
+
+        visualRoot.localScale = originalScale;
+
+        currentGridPos = targetPos;
     }
 
     private IEnumerator AttackTarget(UnitBase target)
     {
-        Debug.Log($"⚔️ {gameObject.name}: {target.name} 공격!");
-        target.TakeDamage(1); // 1 데미지 부여
+        target.TakeDamage(1);
         yield return new WaitForSeconds(0.5f);
     }
 }

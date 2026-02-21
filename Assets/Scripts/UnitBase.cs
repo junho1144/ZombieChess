@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public enum PieceType
@@ -9,7 +10,6 @@ public enum PieceType
     Bishop, // 비숍 (아군 맨해튼 거리 1칸 옆)
     Rook    // 룩 (상하좌우 무제한)
 }
-
 public class UnitBase : MonoBehaviour
 {
     [Header("기본 스탯 설정")]
@@ -26,6 +26,10 @@ public class UnitBase : MonoBehaviour
     public float heartSpacing = 0.1f; // 하트 사이 간격
     public Vector3 healthBarOffset = new Vector3(0, 0.6f, 0); // 캐릭터 머리 위 오프셋
     public float heartScale = 0.5f; // 하트 크기
+    [Header("모션 관련")]
+    protected bool isShaking = false;
+    public float hitShakeDuration = 0.2f;
+    public float hitShakeAmount = 0.1f;
 
     // 코드로 자동 생성된 하트들을 담아둘 리스트
     private List<GameObject> heartIcons = new List<GameObject>();
@@ -149,11 +153,34 @@ public class UnitBase : MonoBehaviour
 
         // ★ 데미지를 입었을 때 UI를 갱신하여 오른쪽 하트를 끕니다.
         UpdateHealthUI();
+        StartCoroutine(HitShake());
 
         if (currentHP <= 0)
         {
             Die();
         }
+    }
+    private IEnumerator HitShake()
+    {
+        if (isShaking) yield break;
+
+        isShaking = true;
+
+        Vector3 originalPos = transform.position;
+        float time = 0f;
+
+        while (time < hitShakeDuration)
+        {
+            time += Time.deltaTime;
+
+            float offsetX = Random.Range(-hitShakeAmount, hitShakeAmount);
+            transform.position = originalPos + new Vector3(offsetX, 0f, 0f);
+
+            yield return null;
+        }
+
+        transform.position = originalPos;
+        isShaking = false;
     }
 
     // ★ 체력에 맞춰 하트 이미지를 켜고 끄는 전용 함수
