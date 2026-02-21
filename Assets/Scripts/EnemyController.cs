@@ -86,6 +86,10 @@ public class EnemyController : UnitBase
 
     private IEnumerator MoveTowardsTarget(UnitBase target)
     {
+
+        // ★ 적이 이동하기 전에 자신의 이동 가능 타일을 보라색으로 표시합니다.
+        ShowMovableTiles(Color.magenta);
+
         Vector2Int bestMove = currentGridPos;
 
         int minDistance =
@@ -113,9 +117,16 @@ public class EnemyController : UnitBase
             }
         }
 
-        if (bestMove != currentGridPos)
-            yield return JumpSpinMove(bestMove);
+        yield return new WaitForSeconds(0.5f);
 
+        if (bestMove != currentGridPos)
+        {
+            yield return JumpSpinMove(bestMove);
+        }
+
+        // ★ 이동이 끝났으므로 타일 하이라이트를 모두 끕니다.
+        GridManager.Instance.ClearAllTileHighlights();
+        
         yield return new WaitForSeconds(0.3f);
     }
 
@@ -149,6 +160,7 @@ public class EnemyController : UnitBase
             visualRoot.localScale = Vector3.Lerp(originalScale, squashScale, t);
             yield return null;
         }
+
 
         // 2️⃣ 점프 직전 복구
         time = 0f;
@@ -228,6 +240,7 @@ public class EnemyController : UnitBase
         visualRoot.localScale = originalScale;
 
         currentGridPos = targetPos;
+
     }
 
     private IEnumerator AttackTarget(UnitBase target)
