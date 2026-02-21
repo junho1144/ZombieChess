@@ -30,6 +30,9 @@ public class GridManager : MonoBehaviour
 
     public Dictionary<Vector2Int, Vector3> tilePositions = new Dictionary<Vector2Int, Vector3>();
 
+    // ★ 1. 생성된 Tile 스크립트들을 모두 담아둘 딕셔너리 추가
+    public Dictionary<Vector2Int, Tile> tileObjects = new Dictionary<Vector2Int, Tile>();
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -69,21 +72,38 @@ public class GridManager : MonoBehaviour
                 if (tileScript != null)
                 {
                     tileScript.SetCoordinate(x, y);
-                }
-                // 3. 체스판처럼 번갈아가며 색상 입히기
-                bool isOffset = (x + y) % 2 == 1;
-                SpriteRenderer renderer = spawnedTile.GetComponent<SpriteRenderer>();
 
-                if (isOffset)
-                {
-                    // 완전 검은색이면 배경과 구분 안 될 수 있으니 어두운 회색 적용
-                    renderer.color = new Color(0.3f, 0.3f, 0.3f);
+                    // ★ 생성된 타일 스크립트를 저장
+                    tileObjects[new Vector2Int(x, y)] = tileScript;
+
+                    // ★ 체스판 무늬 색상을 지정하고 '원래 색상'으로 기억시킵니다.
+                    bool isOffset = (x + y) % 2 == 1;
+                    if (isOffset) tileScript.SetOriginalColor(new Color(0.3f, 0.3f, 0.3f));
+                    else tileScript.SetOriginalColor(Color.white);
                 }
 
 
             }
 
 
+        }
+    }
+
+    // ★ 2. 맵 전체 타일의 하이라이트를 모두 끄는 함수
+    public void ClearAllTileHighlights()
+    {
+        foreach (var tile in tileObjects.Values)
+        {
+            tile.ResetColor();
+        }
+    }
+
+    // ★ 3. 특정 좌표의 타일만 원하는 색으로 칠하는 함수
+    public void HighlightTile(Vector2Int pos, Color color)
+    {
+        if (tileObjects.ContainsKey(pos))
+        {
+            tileObjects[pos].SetHighlight(color);
         }
     }
 

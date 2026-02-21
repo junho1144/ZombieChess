@@ -87,6 +87,8 @@ public class EnemyController : UnitBase
     private IEnumerator MoveTowardsTarget(UnitBase target)
     {
 
+        Debug.Log($"{gameObject.name}: {target.name} 방향으로 이동 탐색 중...");
+
         // ★ 적이 이동하기 전에 자신의 이동 가능 타일을 보라색으로 표시합니다.
         ShowMovableTiles(Color.magenta);
 
