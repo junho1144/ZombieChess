@@ -109,18 +109,9 @@ MonoBehaviour:
   isPlayerTeam: 0
   attackRange: 1
   attackDamage: 2
-  currentHP: 5
-  maxHP: 5
-  heartSprite: {fileID: -8210014547110521625, guid: 29851d9ca325b9a4eac852fef83edc8b, type: 3}
-  heartSpacing: 1
-  healthBarOffset: {x: 0, y: 1, z: 0}
-  heartScale: 10
-  hitShakeDuration: 0.2
-  hitShakeAmount: 0.1
+  maxHP: 4
+  currentHP: 4
   currentGridPos: {x: 0, y: 0}
-  moveDuration: 0.25
-  jumpHeight: 0.5
-  squashAmount: 0.75
   visualRoot: {fileID: 0}
 --- !u!114 &7310678506874214821
 MonoBehaviour:
@@ -138,16 +129,7 @@ MonoBehaviour:
   isPlayerTeam: 0
   attackRange: 1
   attackDamage: 1
-  currentHP: 0
   maxHP: 0
-  heartSprite: {fileID: 0}
-  heartSpacing: 1
-  healthBarOffset: {x: 0, y: 1, z: 0}
-  heartScale: 10
-  hitShakeDuration: 0.2
-  hitShakeAmount: 0.1
+  currentHP: 0
   currentGridPos: {x: 0, y: 0}
-  moveDuration: 0.25
-  jumpHeight: 0.5
-  squashAmount: 0.75
   visualRoot: {fileID: 0}

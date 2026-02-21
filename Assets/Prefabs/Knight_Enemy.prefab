@@ -107,14 +107,8 @@ MonoBehaviour:
   pieceType: 2
   isPlayerTeam: 0
   attackRange: 1
-  currentHP: 3
-  maxHP: 3
-  heartSprite: {fileID: 0}
-  heartSpacing: 1
-  healthBarOffset: {x: 0, y: 6, z: 0}
-  heartScale: 3
+  attackDamage: 1
+  maxHP: 2
+  currentHP: 2
   currentGridPos: {x: 0, y: 0}
-  moveDuration: 0.25
-  jumpHeight: 0.5
-  squashAmount: 0.75
   visualRoot: {fileID: 7214572570648561845}

@@ -93,6 +93,9 @@ public class TurnManager : MonoBehaviour
         isGameOver = true;
         Debug.Log("스테이지 클리어! 모든 적을 처치했습니다.");
         if (victoryUI != null) victoryUI.SetActive(true);
+
+        // 스테이지 클리어 sfx by junho
+        AudioManager.instance?.PlaySfx(AudioManager.Sfx.StageClear);
     }
 
     private void TriggerDefeat()
@@ -100,6 +103,9 @@ public class TurnManager : MonoBehaviour
         isGameOver = true;
         Debug.Log("스테이지 패배... 아군이 당했습니다.");
         if (defeatUI != null) defeatUI.SetActive(true);
+
+        // 스테이지 패배 sfx by junho
+        AudioManager.instance?.PlaySfx(AudioManager.Sfx.StageLose);
     }
 
     // ★ UI 버튼에서 호출할 재시작 함수

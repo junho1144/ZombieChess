@@ -108,19 +108,8 @@ MonoBehaviour:
   isPlayerTeam: 1
   attackRange: 1
   attackDamage: 1
-  currentHP: 4
-  maxHP: 4
-  heartSprite: {fileID: -8210014547110521625, guid: 29851d9ca325b9a4eac852fef83edc8b, type: 3}
-  heartSpacing: 1
-  healthBarOffset: {x: 0, y: 6.5, z: 0}
-  heartScale: 3
-  hitShakeDuration: 0.2
-  hitShakeAmount: 0.1
-  shakeRoot: {fileID: 3343394787468908978}
+  maxHP: 3
+  currentHP: 3
   currentGridPos: {x: 0, y: 0}
   currentState: 0
   visualRoot: {fileID: 3343394787468908978}
-  moveDuration: 0.25
-  jumpHeight: 2
-  squashAmount: 0.75
-  squashDuration: 0.035

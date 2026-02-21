@@ -244,14 +244,18 @@ MonoBehaviour:
   gridSize: 8
   playerSpawns:
   - characterPrefab: {fileID: 4939566074250765816, guid: edff013ebb60a3245b4e8eca76e41d02, type: 3}
-    spawnPosition: {x: 0, y: 0}
+    spawnPosition: {x: 1, y: 1}
+  - characterPrefab: {fileID: 356014598984005927, guid: 43f61d3254acde24a80a809158df61d3, type: 3}
+    spawnPosition: {x: 1, y: 0}
   enemySpawns:
-  - characterPrefab: {fileID: 356014598984005927, guid: 2b792466d02a2204ca3be74c03dbdeb6, type: 3}
-    spawnPosition: {x: 7, y: 4}
   - characterPrefab: {fileID: 4278686925607553766, guid: 71f11bb6d52e5304abc72396404e8f68, type: 3}
-    spawnPosition: {x: 5, y: 6}
-  - characterPrefab: {fileID: 9007780813930532236, guid: 48a8956ead0b221458ce4f24f0f0afaa, type: 3}
     spawnPosition: {x: 7, y: 7}
+  - characterPrefab: {fileID: 996506332687037881, guid: f119ab70d0a6b354fb703787a13fedb9, type: 3}
+    spawnPosition: {x: 3, y: 3}
+  - characterPrefab: {fileID: 996506332687037881, guid: f119ab70d0a6b354fb703787a13fedb9, type: 3}
+    spawnPosition: {x: 4, y: 6}
+  - characterPrefab: {fileID: 996506332687037881, guid: f119ab70d0a6b354fb703787a13fedb9, type: 3}
+    spawnPosition: {x: 6, y: 4}
 --- !u!1 &192294331
 GameObject:
   m_ObjectHideFlags: 0
@@ -1806,6 +1810,51 @@ Transform:
   - {fileID: 766241819}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2101302782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2101302784}
+  - component: {fileID: 2101302783}
+  m_Layer: 0
+  m_Name: BgmChanger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2101302783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101302782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d3e95c6eb1aea4d9073ece08fc5df1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BgmChanger
+  targetBgm: 2
+--- !u!4 &2101302784
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101302782}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1817,3 +1866,4 @@ SceneRoots:
   - {fileID: 1608665136}
   - {fileID: 1926202540}
   - {fileID: 95263898}
+  - {fileID: 2101302784}

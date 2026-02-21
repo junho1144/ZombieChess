@@ -63,6 +63,9 @@ public class PlayerController : UnitBase
 
     public void OnTileClicked(int x, int y)
     {
+        // 타일 클릭 sfx by junho
+        AudioManager.instance?.PlaySfx(AudioManager.Sfx.MouseClick);
+
         if (!canInput || isMoving) return;
 
         if (currentState == ActionState.WaitingToMove)
@@ -149,6 +152,9 @@ public class PlayerController : UnitBase
             visualRoot.localScale = Vector3.Lerp(originalScale, squashScale, t);
             yield return null;
         }
+
+        // 이동 sfx by junho
+        AudioManager.instance?.PlaySfx(AudioManager.Sfx.CharacterMove);
 
         // 출발 스쿼시 복구
         time = 0f;
@@ -379,6 +385,35 @@ public class PlayerController : UnitBase
 
             yield return null;
         }
+
+        // 공격 사운드 by junho
+        switch (pieceType) 
+        {
+            case PieceType.Pawn:
+                AudioManager.instance?.PlaySfx(AudioManager.Sfx.PonAtk);
+                break;
+
+            case PieceType.Prince:
+                AudioManager.instance?.PlaySfx(AudioManager.Sfx.SonAtk);
+                break;
+
+            case PieceType.Knight:
+                AudioManager.instance?.PlaySfx(AudioManager.Sfx.KnightAtk);
+                break;
+
+            case PieceType.Bishop:
+                AudioManager.instance?.PlaySfx(AudioManager.Sfx.BishopAtk);
+                break;
+
+            case PieceType.Rook:
+                AudioManager.instance?.PlaySfx(AudioManager.Sfx.LookAtk);
+                break;
+
+            case PieceType.Boss:
+                AudioManager.instance?.PlaySfx(AudioManager.Sfx.KQAtk);
+                break;
+        }
+        
 
         transform.position = targetWorld;
 
