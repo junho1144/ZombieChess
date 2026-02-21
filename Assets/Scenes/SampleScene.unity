@@ -172,7 +172,6 @@ MonoBehaviour:
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
   m_Antialiasing: 0
-  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -224,7 +223,6 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  near clip plane: 0.1
   far clip plane: 1000
   field of view: 34
   orthographic: 1
@@ -492,7 +490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3889143462932012078, guid: 1d3be887ff62da944b70e0863c83e39a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -563,13 +561,10 @@ PrefabInstance:
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.size
       value: 4
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: playerSpawns.Array.size
       value: 5
-      value: 2
-      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawnPositions.Array.size
@@ -627,31 +622,25 @@ PrefabInstance:
       propertyPath: enemySpawns.Array.data[1].characterPrefab
       value: 
       objectReference: {fileID: 4278686925607553766, guid: 71f11bb6d52e5304abc72396404e8f68, type: 3}
-      objectReference: {fileID: 996506332687037881, guid: f119ab70d0a6b354fb703787a13fedb9, type: 3}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[1].spawnPosition.x
       value: 7
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[1].spawnPosition.y
       value: 6
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[2].characterPrefab
       value: 
       objectReference: {fileID: 996506332687037881, guid: f119ab70d0a6b354fb703787a13fedb9, type: 3}
-      objectReference: {fileID: 9007780813930532236, guid: 48a8956ead0b221458ce4f24f0f0afaa, type: 3}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[2].spawnPosition.x
       value: 5
-      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[2].spawnPosition.y
       value: 5
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[3].characterPrefab
