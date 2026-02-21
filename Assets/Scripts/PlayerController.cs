@@ -1,9 +1,12 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerController : UnitBase
 {
     private bool canInput = false;
+    private bool isMoving = false;
+    private bool facingRight = true;
 
     public enum ActionState
     {
@@ -15,16 +18,24 @@ public class PlayerController : UnitBase
 
     public ActionState currentState = ActionState.Idle;
 
+    [SerializeField] private Transform visualRoot;
+    [SerializeField] private float moveDuration = 0.25f;
+    [SerializeField] private float jumpHeight = 0.5f;
+    [SerializeField] private float squashAmount = 0.75f;
+    [SerializeField] private float squashDuration = 0.035f;
+
     public override void Initialize(Vector2Int startPos, bool isPlayer)
     {
         maxHP = 3;
         currentHP = 3;
+        attackRange = 1;
         base.Initialize(startPos, isPlayer);
     }
 
     public void EnableInput(bool value)
     {
         canInput = value;
+
 
         SetHighlight(value);
 
@@ -44,7 +55,8 @@ public class PlayerController : UnitBase
 
     void Update()
     {
-        if (!canInput) return;
+        if (!canInput || isMoving) return;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             CompleteAction();
@@ -53,22 +65,22 @@ public class PlayerController : UnitBase
 
     public void OnTileClicked(int x, int y)
     {
-        if (!canInput) return;
-        if (currentState == ActionState.WaitingToMove) TryMove(x, y);
-        else if (currentState == ActionState.WaitingToAttack) TryAttack(x, y);
+        if (!canInput || isMoving) return;
+
+        if (currentState == ActionState.WaitingToMove)
+            TryMove(x, y);
+        else if (currentState == ActionState.WaitingToAttack)
+            TryAttack(x, y);
     }
 
-    // ★ 1. 내 주변(공격 사거리 내)에 공격할 수 있는 적이 있는지 확인하는 헬퍼 함수
     private bool HasEnemyInRange()
     {
-        List<UnitBase> enemies = TurnManager.Instance.GetTeamList(false); // 적 리스트 가져오기
+        List<UnitBase> enemies = TurnManager.Instance.GetTeamList(false);
+
         foreach (UnitBase enemy in enemies)
         {
-            // 살아있는 적이 내 사거리(IsValidAttack) 안에 있다면 true 반환
             if (enemy != null && enemy.currentHP > 0 && IsValidAttack(enemy.currentGridPos))
-            {
                 return true;
-            }
         }
         return false;
     }
@@ -77,83 +89,389 @@ public class PlayerController : UnitBase
     {
         Vector2Int targetPos = new Vector2Int(targetX, targetY);
 
-        // ★ 2. 이동 페이즈에서 '자기 자신(제자리)'을 클릭했을 때의 스마트 처리
         if (currentGridPos == targetPos)
         {
             if (HasEnemyInRange())
             {
-                // 주변에 적이 있다면 -> 이동 생략, 공격 준비!
                 currentState = ActionState.WaitingToAttack;
                 Debug.Log($"{gameObject.name}: 이동 생략! 공격 대상 타일을 클릭하거나 제자리를 다시 클릭해 행동을 포기하세요.");
                 // ★ 제자리 클릭으로 이동을 생략하고 공격 페이즈가 되면 빨간색으로 표시
+                GridManager.Instance.ClearAllTileHighlights();
                 ShowAttackableTiles(new Color(1f, 0.4f, 0.4f, 1f));
             }
             else
             {
-                // 주변에 적도 없다면 -> 불필요한 공격 페이즈를 건너뛰고 바로 턴 종료!
-                Debug.Log($"{gameObject.name}: 이동 생략. 사거리 내에 적이 없어 행동을 바로 완료합니다.");
                 CompleteAction();
             }
             return;
         }
 
-        // 기존 이동 로직
-        if (IsValidMove(targetPos))
+        if (!IsValidMove(targetPos))
         {
-            currentGridPos = targetPos;
-            Vector3 newWorldPos = GridManager.Instance.GetWorldPosition(targetX, targetY);
-            newWorldPos.z = -1f;
-            transform.position = newWorldPos;
+            Debug.Log("이동 불가");
+            return;
+        }
 
-            // ★ 3. 이동을 마친 후에도 스마트하게 상태 확인
-            if (HasEnemyInRange())
+        // (요청대로 유지) Vector 변환/좌표계 관련 부분은 건드리지 않음
+        StartCoroutine(MoveRoutine(targetPos));
+    }
+
+    // ✅ same side: 0→90→0 / flip: 0→180(착지 후 유지) + 스쿼시 + 점프
+    private IEnumerator MoveRoutine(Vector2Int targetPos)
+    {
+        isMoving = true;
+        canInput = false;
+
+        if (visualRoot == null)
+            visualRoot = transform;
+
+        Vector2Int dir = targetPos - currentGridPos;
+
+        bool moveRightSide = (dir.x + dir.y) >= 0;
+        bool doFlip = moveRightSide != facingRight;
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = GridManager.Instance.GetWorldPosition(targetPos.x, targetPos.y);
+        endPos.z = -1f;
+
+        float time = 0f;
+
+        Vector3 originalScale = visualRoot.localScale;
+        Vector3 squashScale = new Vector3(
+            originalScale.x * 1.1f,
+            originalScale.y * squashAmount,
+            originalScale.z
+        );
+
+        // 1️⃣ 출발 스쿼시
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float t = Mathf.Clamp01(time / squashDuration);
+            visualRoot.localScale = Vector3.Lerp(originalScale, squashScale, t);
+            yield return null;
+        }
+
+        // 출발 스쿼시 복구
+        time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float t = Mathf.Clamp01(time / squashDuration);
+            visualRoot.localScale = Vector3.Lerp(squashScale, originalScale, t);
+            yield return null;
+        }
+
+        // 2️⃣ 점프 + 회전
+        time = 0f;
+
+        float startYRot = visualRoot.localEulerAngles.y;
+        float targetYRot = startYRot;
+        if (doFlip) targetYRot += 180f;
+
+        while (time < 1f)
+        {
+            time += Time.deltaTime / moveDuration;
+            float t = Mathf.Clamp01(time);
+
+            // 위치
+            Vector3 pos = Vector3.Lerp(startPos, endPos, t);
+            pos.y += Mathf.Sin(t * Mathf.PI) * jumpHeight;
+            transform.position = pos;
+
+            // 회전: 뒤집기면 180, 아니면 0→90→0
+            float yRot;
+            if (doFlip)
             {
-                currentState = ActionState.WaitingToAttack;
-                // ★ 일반 이동 완료 후 공격 페이즈가 되면 빨간색으로 표시
-                ShowAttackableTiles(new Color(1f, 0.4f, 0.4f, 1f));
-                Debug.Log($"{gameObject.name}: 이동 완료! 공격 대상 타일을 클릭하거나 제자리를 클릭하세요.");
+                yRot = Mathf.Lerp(startYRot, targetYRot, t);
             }
             else
             {
-                Debug.Log($"{gameObject.name}: 이동 완료! 사거리 내에 타격 가능한 적이 없어 행동을 바로 완료합니다.");
-                CompleteAction();
+                float arc = Mathf.Sin(t * Mathf.PI) * 90f; // 0 → 90 → 0
+                yRot = startYRot + arc;
             }
+
+            visualRoot.localRotation = Quaternion.Euler(0f, yRot, 0f);
+
+            yield return null;
         }
-        else Debug.Log($"{gameObject.name}: 거기로는 이동할 수 없습니다! (기물 규칙 위반 또는 장애물 있음)");
+
+        // 착지 보정
+        transform.position = endPos;
+
+        // 착지 회전 확정: 뒤집기면 180 유지, 아니면 원래 각도
+        visualRoot.localRotation = Quaternion.Euler(0f, doFlip ? targetYRot : startYRot, 0f);
+
+        if (doFlip)
+            facingRight = moveRightSide;
+
+        // 3️⃣ 착지 스쿼시
+        time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float t = Mathf.Clamp01(time / squashDuration);
+            visualRoot.localScale = Vector3.Lerp(originalScale, squashScale, t);
+            yield return null;
+        }
+
+        // 착지 복구
+        time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float t = Mathf.Clamp01(time / squashDuration);
+            visualRoot.localScale = Vector3.Lerp(squashScale, originalScale, t);
+            yield return null;
+        }
+
+        visualRoot.localScale = originalScale;
+
+        // ★ Grid 위치 확정
+        currentGridPos = targetPos;
+
+        isMoving = false;
+        canInput = true;
+
+        if (HasEnemyInRange())
+        {
+            currentState = ActionState.WaitingToAttack;
+
+            // ✅ 이동 표시 지우고 공격 표시로 전환
+            GridManager.Instance.ClearAllTileHighlights();
+            ShowAttackableTiles(new Color(1f, 0.4f, 0.4f, 1f));
+            Debug.Log($"{gameObject.name}: 이동 완료! 공격 대상 타일을 클릭하거나 제자리를 클릭하세요.");
+        }
+        else
+        {
+            CompleteAction();
+        }
     }
 
     private void TryAttack(int targetX, int targetY)
     {
         Vector2Int targetPos = new Vector2Int(targetX, targetY);
 
-        if (IsValidAttack(targetPos))
+        // 공격 페이즈에서 제자리 클릭 시 공격 포기
+        if (currentGridPos == targetPos)
         {
-            // ★ 클릭한 타일에 누군가 서 있는지 확인 (TurnManager의 헬퍼 함수 사용)
-            UnitBase targetUnit = TurnManager.Instance.GetUnitAt(targetPos);
+            CompleteAction();
+            return;
+        }
 
-            
+        if (!IsValidAttack(targetPos))
+        {
+            Debug.Log($"{gameObject.name}: 사거리 밖입니다! 다시 클릭하세요.");
+            return;
+        }
 
-            // 해당 타일에 캐릭터가 있고, 그 캐릭터가 적군(!isPlayerTeam)일 때만 공격 실행!
-            if (targetUnit != null && !targetUnit.isPlayerTeam)
-            {
-                Debug.Log($"{gameObject.name}: [{targetX}, {targetY}]의 {targetUnit.name} 공격!");
-                targetUnit.TakeDamage(1);
+        // ★ 클릭한 타일에 누가 있는지 확인
+        UnitBase targetUnit = TurnManager.Instance.GetUnitAt(targetPos);
 
-                // 타격에 성공했을 때만 턴을 넘깁니다.
-                CompleteAction();
-            }
-            else
-            {
-                // 빈 땅이거나 아군이 서 있는 곳을 클릭했을 때
-                Debug.Log($"{gameObject.name}: 해당 타일에는 공격할 적이 없습니다! 빨간색 타일(적)을 누르거나 제자리를 눌러 행동을 종료하세요.");
-            }
+        // 적이 있을 때만 공격 모션 실행
+        if (targetUnit != null && !targetUnit.isPlayerTeam && targetUnit.currentHP > 0)
+        {
+            Debug.Log($"{gameObject.name}: [{targetX}, {targetY}]의 {targetUnit.name} 공격!");
+
+            // ✅ 여기서 코루틴 실행
+            StartCoroutine(AttackEnemy(targetUnit));
         }
         else
         {
-            Debug.Log($"{gameObject.name}: 사거리 밖입니다! 다시 클릭하세요.");
+            Debug.Log($"{gameObject.name}: 해당 타일에는 공격할 적이 없습니다! 빨간색 타일(적)을 누르거나 제자리를 눌러 행동을 종료하세요.");
         }
     }
+    private IEnumerator AttackEnemy(UnitBase target)
+    {
+        if (target == null) yield break;
 
+        if (visualRoot == null)
+            visualRoot = transform;
+
+        // ===== 설정값 (원하면 SerializeField로 빼도 됨) =====
+        float backStepDistance = 0.25f;   // 살짝 빠지는 거리(월드 단위)
+        float backStepDuration = 0.08f;   // 백스텝 시간
+        float dashDuration = 0.10f;       // 돌진 시간
+        float returnMoveDuration = moveDuration; // 복귀는 "한 칸 이동 모션"과 동일하게
+        float hitPause = 0.05f;           // 타격 후 잠깐 멈춤(원하면 0으로)
+        float landingZ = -1f;             // 너희 프로젝트 규칙 유지
+
+        Vector3 originWorld = transform.position;
+
+        // 타겟 월드 위치 (그리드->월드)
+        Vector3 targetWorld = GridManager.Instance.GetWorldPosition(target.currentGridPos.x, target.currentGridPos.y);
+        targetWorld.z = landingZ;
+
+        // 방향(그리드 기준, 인접 1칸 전제)
+        Vector2Int dir = target.currentGridPos - currentGridPos;
+
+        // (dir.x + dir.y) 기준 우측/좌측 계열 판정(이동과 동일)
+        bool targetRightSide = (dir.x + dir.y) >= 0;
+        bool doFlip = (targetRightSide != facingRight);
+
+        // 백스텝 방향(월드): 타겟 반대 방향 = -dir
+        // GridManager가 아이소메트릭 월드 변환을 하고 있으니,
+        // '월드 오프셋'은 "한 칸 뒤 타일의 월드 위치"를 샘플링해서 방향을 잡는 게 가장 안정적임.
+        Vector2Int backGrid = currentGridPos - dir; // 한 칸 뒤(보드 밖이면 그래도 방향 계산용으로만 씀)
+        Vector3 backWorld = GridManager.Instance.GetWorldPosition(backGrid.x, backGrid.y);
+        backWorld.z = landingZ;
+
+        Vector3 backDirWorld = (backWorld - originWorld);
+        backDirWorld.z = 0f;
+        if (backDirWorld.sqrMagnitude < 0.0001f)
+            backDirWorld = -(targetWorld - originWorld); // 혹시 같은 점이면 fallback
+
+        backDirWorld.z = 0f;
+        backDirWorld = backDirWorld.normalized;
+
+        Vector3 backStepWorld = originWorld + backDirWorld * backStepDistance;
+        backStepWorld.z = originWorld.z;
+
+        // =========================
+        // 과정 1) 백스텝 + 회전
+        // =========================
+        float t = 0f;
+        float baseYRot = visualRoot.localEulerAngles.y;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / backStepDuration;
+            float tt = Mathf.Clamp01(t);
+
+            // 백스텝 이동(직선)
+            transform.position = Vector3.Lerp(originWorld, backStepWorld, tt);
+
+            // 회전 규칙:
+            // doFlip이면 180, 아니면 0→90→0
+            float yRot;
+            if (doFlip)
+            {
+                yRot = Mathf.Lerp(baseYRot, baseYRot + 180f, tt);
+            }
+            else
+            {
+                float arc = Mathf.Sin(tt * Mathf.PI) * 90f; // 0→90→0
+                yRot = baseYRot + arc;
+            }
+
+            visualRoot.localRotation = Quaternion.Euler(0f, yRot, 0f);
+            yield return null;
+        }
+
+
+        // 백스텝 종료 위치 확정
+        transform.position = backStepWorld;
+
+        // doFlip이면 여기서 180 유지, 아니면 원래로
+        visualRoot.localRotation = Quaternion.Euler(0f, doFlip ? baseYRot + 180f : baseYRot, 0f);
+
+        // facingRight 갱신(뒤집혔으면 방향 바뀐 걸로 확정)
+        if (doFlip) facingRight = targetRightSide;
+
+        // =========================
+        // 과정 2) 돌진(직선) + 타격(HP-1)
+        // =========================
+        t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / dashDuration;
+            float tt = Mathf.Clamp01(t);
+
+            transform.position = Vector3.Lerp(backStepWorld, targetWorld, tt);
+
+            yield return null;
+        }
+
+        transform.position = targetWorld;
+
+        // 타격 적용(요구사항: 이 구간에 넣기)
+        target.TakeDamage(1);
+
+        if (hitPause > 0f)
+            yield return new WaitForSeconds(hitPause);
+
+        // =========================
+        // 과정 3) 복귀(한 칸 이동 모션과 동일) + 0→90→0 회전
+        // =========================
+        // 복귀는 "한 칸 이동 모션"처럼: 스쿼시(출발) -> 점프 -> 착지 스쿼시
+        Vector3 startPos = transform.position; // 현재 타겟 칸
+        Vector3 endPos = originWorld;          // 내 원래 칸
+
+        Vector3 originalScale = visualRoot.localScale;
+        Vector3 squashScale = new Vector3(
+            originalScale.x * 1.1f,
+            originalScale.y * squashAmount,
+            originalScale.z
+        );
+
+        // 3-1) 복귀 시작 스쿼시
+        float time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float s = Mathf.Clamp01(time / squashDuration);
+            visualRoot.localScale = Vector3.Lerp(originalScale, squashScale, s);
+            yield return null;
+        }
+
+        // 3-2) 스쿼시 복구
+        time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float s = Mathf.Clamp01(time / squashDuration);
+            visualRoot.localScale = Vector3.Lerp(squashScale, originalScale, s);
+            yield return null;
+        }
+
+        // 3-3) 점프 복귀 + (무조건) 0→90→0 회전
+        time = 0f;
+        float returnBaseY = visualRoot.localEulerAngles.y;
+
+        while (time < 1f)
+        {
+            time += Time.deltaTime / returnMoveDuration;
+            float tt = Mathf.Clamp01(time);
+
+            Vector3 pos = Vector3.Lerp(startPos, endPos, tt);
+            pos.y += Mathf.Sin(tt * Mathf.PI) * jumpHeight;
+            transform.position = pos;
+
+            float arc = Mathf.Sin(tt * Mathf.PI) * 90f; // 무조건 0→90→0
+            visualRoot.localRotation = Quaternion.Euler(0f, returnBaseY + arc, 0f);
+
+            yield return null;
+        }
+
+        transform.position = endPos;
+        visualRoot.localRotation = Quaternion.Euler(0f, returnBaseY, 0f);
+
+        // 3-4) 착지 스쿼시
+        time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float s = Mathf.Clamp01(time / squashDuration);
+            visualRoot.localScale = Vector3.Lerp(originalScale, squashScale, s);
+            yield return null;
+        }
+
+        // 3-5) 착지 복구
+        time = 0f;
+        while (time < squashDuration)
+        {
+            time += Time.deltaTime;
+            float s = Mathf.Clamp01(time / squashDuration);
+            visualRoot.localScale = Vector3.Lerp(squashScale, originalScale, s);
+            yield return null;
+        }
+
+        visualRoot.localScale = originalScale;
+
+        // 마지막 안전 보정
+        transform.position = originWorld;
+        CompleteAction();
+    }
     private void CompleteAction()
     {
         currentState = ActionState.ActionComplete;
