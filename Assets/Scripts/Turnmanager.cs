@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
+
 public class TurnManager : MonoBehaviour
 {
 
@@ -12,6 +14,8 @@ public class TurnManager : MonoBehaviour
     // 외부에서는 읽기만 가능하게 설정
     public bool IsPlayerTurn { get; private set; }
 
+    // ★ 1. 현재 몇 번째 턴인지 추적하는 변수를 추가합니다. (1턴부터 시작)
+    public int currentTurn = 1;
 
     private List<PlayerController> playerList = new List<PlayerController>();
     private List<EnemyController> enemyList = new List<EnemyController>();
@@ -30,18 +34,46 @@ public class TurnManager : MonoBehaviour
     {
         playerList = players;
         enemyList = enemies;
+        currentTurn = 1; // 게임 시작 시 1턴으로 초기화
         StartPlayerTurn();
+    }
+
+    // ★ 기물이 죽었을 때 명단에서 빼주는 함수
+    public void RemoveUnit(UnitBase unit, bool isPlayerTeam)
+    {
+        if (isPlayerTeam)
+        {
+            playerList.Remove(unit as PlayerController);
+        }
+        else
+        {
+            enemyList.Remove(unit as EnemyController);
+        }
+    }
+
+    public List<UnitBase> GetTeamList(bool isPlayerTeam)
+    {
+        List<UnitBase> teamList = new List<UnitBase>();
+        if (isPlayerTeam)
+        {
+            foreach (var p in playerList) teamList.Add(p);
+        }
+        else
+        {
+            foreach (var e in enemyList) teamList.Add(e);
+        }
+        return teamList;
     }
 
 
 
     void StartPlayerTurn()
     {
-        Debug.Log("==== 플레이어 턴 시작 ====");
+        Debug.Log($"==== [ {currentTurn} 턴 ] 플레이어 페이즈 시작 ====");
         IsPlayerTurn = true;
         currentPlayerIndex = 0;
         ActivateCurrentPlayer();
-        //playerList.EnableInput(true);
+        
     }
 
     // ★ 현재 순서의 플레이어에게 조작 권한을 줍니다.
@@ -85,16 +117,15 @@ public class TurnManager : MonoBehaviour
 
     public void EndPlayerTurn()
     {
-        Debug.Log("==== 플레이어 턴 종료 ====");
+        Debug.Log($"==== [ {currentTurn} 턴 ] 플레이어 페이즈 종료 ====");
         IsPlayerTurn = false;
         StartCoroutine(EnemyTurnRoutine());
-        //playerList.EnableInput(false);
         
     }
 
     IEnumerator EnemyTurnRoutine()
     {
-        Debug.Log("==== 적 턴 시작 ====");
+        Debug.Log($"==== [ {currentTurn} 턴 ] 적 페이즈 시작 ====");
 
         for (int i = 0; i < enemyList.Count; i++)
         {
@@ -105,8 +136,33 @@ public class TurnManager : MonoBehaviour
             }
         }
 
-        Debug.Log("==== 적 턴 종료 ====");
+        Debug.Log($"==== [ {currentTurn} 턴 ] 적 페이즈 종료 ====");
+
+        // ★ 3. 적의 행동까지 모두 끝났으므로 턴 수를 1 증가시킵니다.
+        currentTurn++;
+
         StartPlayerTurn(); // 다시 플레이어 턴으로
     }
-   
+
+    // ★ 특정 좌표에 살아있는 기물이 있는지 확인해서 돌려주는 함수 (겹침 방지용)
+    public UnitBase GetUnitAt(Vector2Int pos)
+    {
+        // 1. 아군 중에 해당 좌표에 서 있는 사람이 있는지 확인
+        foreach (var p in playerList)
+        {
+            if (p != null && p.currentHP > 0 && p.currentGridPos == pos)
+                return p;
+        }
+
+        // 2. 적군 중에 해당 좌표에 서 있는 사람이 있는지 확인
+        foreach (var e in enemyList)
+        {
+            if (e != null && e.currentHP > 0 && e.currentGridPos == pos)
+                return e;
+        }
+
+        // 아무도 없다면 null 반환
+        return null;
+    }
 }
+

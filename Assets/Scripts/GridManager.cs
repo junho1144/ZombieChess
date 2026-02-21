@@ -89,27 +89,25 @@ public class GridManager : MonoBehaviour
 
     void SpawnCharacters()
     {
-        // 1. 플레이어 캐릭터들 생성 (리스트로 관리)
         List<PlayerController> spawnedPlayers = new List<PlayerController>();
 
         for (int i = 0; i < playerSpawns.Count; i++)
         {
-            // 리스트에서 i번째 상자를 꺼내옵니다.
             CharacterSpawnInfo info = playerSpawns[i];
 
-            // 상자 안의 좌표 정보를 사용합니다.
             Vector3 pWorldPos = GetWorldPosition(info.spawnPosition.x, info.spawnPosition.y);
             pWorldPos.z = -1f;
 
-            // ★ 상자 안의 프리팹 정보를 사용하여 생성합니다!
             GameObject playerObj = Instantiate(info.characterPrefab, pWorldPos, Quaternion.identity);
             playerObj.name = $"Player_{i + 1}";
             PlayerController playerScript = playerObj.GetComponent<PlayerController>();
 
+            // ★ 캐릭터 생성 후 반드시 Initialize를 호출해줍니다! (true = 아군)
+            playerScript.Initialize(info.spawnPosition, true);
+
             spawnedPlayers.Add(playerScript);
         }
 
-        // 2. 적 캐릭터들 생성
         List<EnemyController> spawnedEnemies = new List<EnemyController>();
 
         for (int i = 0; i < enemySpawns.Count; i++)
@@ -123,12 +121,19 @@ public class GridManager : MonoBehaviour
             enemyObj.name = $"Enemy_{i + 1}";
             EnemyController enemyScript = enemyObj.GetComponent<EnemyController>();
 
+            // ★ 적 생성 후에도 Initialize를 호출해줍니다! (false = 적군)
+            enemyScript.Initialize(info.spawnPosition, false);
+
             spawnedEnemies.Add(enemyScript);
         }
 
-        // 3. TurnManager에게 리스트 2개를 모두 넘겨줍니다.
         TurnManager.Instance.InitAndStartGame(spawnedPlayers, spawnedEnemies);
     }
+
+
+
+
+
 
     public Vector3 GetWorldPosition(int x, int y)
     {

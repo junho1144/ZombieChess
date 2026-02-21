@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 793671795023492906}
   - component: {fileID: 1114604508051908202}
+  - component: {fileID: -3301009324844631113}
   m_Layer: 0
   m_Name: Rook_Player
   m_TagString: Untagged
@@ -91,3 +92,26 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &-3301009324844631113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9007780813930532236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 355a0e4696c147943bdab046f8538dec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  pieceType: 4
+  isPlayerTeam: 1
+  attackRange: 1
+  currentHP: 3
+  maxHP: 3
+  heartSprite: {fileID: 0}
+  heartSpacing: 0.1
+  healthBarOffset: {x: 0, y: 0.6, z: 0}
+  heartScale: 0.5
+  currentGridPos: {x: 0, y: 0}
+  currentState: 0

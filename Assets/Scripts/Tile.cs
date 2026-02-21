@@ -1,4 +1,5 @@
 using UnityEngine;
+//using UnityEngine.InputSystem; // ★ 유니티의 새로운 입력 시스템 사용
 using UnityEngine.EventSystems;
 
 public class Tile : MonoBehaviour, IPointerClickHandler
@@ -21,6 +22,15 @@ public class Tile : MonoBehaviour, IPointerClickHandler
         {
             Debug.Log("지금은 내 턴이 아닙니다!");
             return;
+        }
+
+        // 현재 활성화된(턴을 진행 중인) 플레이어를 가져옵니다.
+        PlayerController activePlayer = TurnManager.Instance.GetActivePlayer();
+
+        if (activePlayer != null)
+        {
+            // ★ MoveToTile 대신 방금 만든 통합 클릭 함수를 호출합니다.
+            activePlayer.OnTileClicked(gridX, gridY);
         }
 
         Debug.Log($"클릭한 타일 좌표: [{gridX}, {gridY}]");

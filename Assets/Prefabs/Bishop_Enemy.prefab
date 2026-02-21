@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1607851347177480609}
   - component: {fileID: 3233893428097434352}
+  - component: {fileID: -1656980618485753867}
   m_Layer: 0
   m_Name: Bishop_Enemy
   m_TagString: Untagged
@@ -91,3 +92,25 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &-1656980618485753867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4278686925607553766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb37816083627c40a53c40bb165e7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  pieceType: 3
+  isPlayerTeam: 0
+  attackRange: 1
+  currentHP: 3
+  maxHP: 3
+  heartSprite: {fileID: 0}
+  heartSpacing: 0.1
+  healthBarOffset: {x: 0, y: 0.6, z: 0}
+  heartScale: 0.5
+  currentGridPos: {x: 0, y: 0}

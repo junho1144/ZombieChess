@@ -506,11 +506,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1608665136}
-  - component: {fileID: 1608665135}
-  - component: {fileID: 1608665134}
   - component: {fileID: 1608665133}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: TurnManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -528,31 +526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce2e18fd73208924b87ade2605e3614b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurnManager
---- !u!114 &1608665134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1608665132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 355a0e4696c147943bdab046f8538dec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  turnManager: {fileID: 1608665133}
---- !u!114 &1608665135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1608665132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb37816083627c40a53c40bb165e7d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  currentTurn: 1
 --- !u!4 &1608665136
 Transform:
   m_ObjectHideFlags: 0
@@ -586,11 +560,11 @@ PrefabInstance:
       objectReference: {fileID: 356014598984005927, guid: 43f61d3254acde24a80a809158df61d3, type: 3}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: playerSpawns.Array.size
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawnPositions.Array.size
@@ -647,35 +621,47 @@ PrefabInstance:
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[1].characterPrefab
       value: 
-      objectReference: {fileID: 9007780813930532236, guid: 48a8956ead0b221458ce4f24f0f0afaa, type: 3}
+      objectReference: {fileID: 4278686925607553766, guid: 71f11bb6d52e5304abc72396404e8f68, type: 3}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[1].spawnPosition.x
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[1].spawnPosition.y
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[2].characterPrefab
       value: 
-      objectReference: {fileID: 4278686925607553766, guid: 71f11bb6d52e5304abc72396404e8f68, type: 3}
+      objectReference: {fileID: 996506332687037881, guid: f119ab70d0a6b354fb703787a13fedb9, type: 3}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[2].spawnPosition.x
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: enemySpawns.Array.data[2].spawnPosition.y
-      value: 4
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: enemySpawns.Array.data[3].characterPrefab
+      value: 
+      objectReference: {fileID: 9007780813930532236, guid: 48a8956ead0b221458ce4f24f0f0afaa, type: 3}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: enemySpawns.Array.data[3].spawnPosition.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: enemySpawns.Array.data[3].spawnPosition.y
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: playerSpawns.Array.data[0].characterPrefab
       value: 
-      objectReference: {fileID: 356014598984005927, guid: 43f61d3254acde24a80a809158df61d3, type: 3}
+      objectReference: {fileID: 4939566074250765816, guid: edff013ebb60a3245b4e8eca76e41d02, type: 3}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: playerSpawns.Array.data[1].characterPrefab
       value: 
-      objectReference: {fileID: 9007780813930532236, guid: 90bdbe59514914b458ee1ed8ccb4b388, type: 3}
+      objectReference: {fileID: 356014598984005927, guid: 43f61d3254acde24a80a809158df61d3, type: 3}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: playerSpawns.Array.data[1].spawnPosition.x
       value: 1
@@ -687,14 +673,46 @@ PrefabInstance:
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: playerSpawns.Array.data[2].characterPrefab
       value: 
-      objectReference: {fileID: 4278686925607553766, guid: 73fcc569aa1c4244f84a7f74db42ee1f, type: 3}
+      objectReference: {fileID: 9007780813930532236, guid: 90bdbe59514914b458ee1ed8ccb4b388, type: 3}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: playerSpawns.Array.data[2].spawnPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: playerSpawns.Array.data[2].spawnPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: playerSpawns.Array.data[3].characterPrefab
+      value: 
+      objectReference: {fileID: 4278686925607553766, guid: 73fcc569aa1c4244f84a7f74db42ee1f, type: 3}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: playerSpawns.Array.data[3].spawnPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: playerSpawns.Array.data[3].spawnPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: playerSpawns.Array.data[4].characterPrefab
+      value: 
+      objectReference: {fileID: 996506332687037881, guid: 8172a8679c5ce3d488211329ea05c8d5, type: 3}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: playerSpawns.Array.data[4].spawnPosition.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7240449564776838241, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: playerSpawns.Array.data[4].spawnPosition.y
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7373332668258979030, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: m_Name
       value: GridManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7373332668258979030, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8388408694599280601, guid: c77d9c34fd90e194c956c7f19f13868b, type: 3}
       propertyPath: m_LocalPosition.x
