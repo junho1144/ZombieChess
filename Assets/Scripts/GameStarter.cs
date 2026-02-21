@@ -5,6 +5,6 @@ public class GameStarter : MonoBehaviour
 {
     public void LoadPlayScene()
     {
-       SceneManager.LoadScene("CutsceneScene");
+       SceneManager.LoadScene("Cutscene0");
     }
 }
