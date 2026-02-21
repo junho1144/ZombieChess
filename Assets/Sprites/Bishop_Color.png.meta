@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0c5b548b1cfb1c042956fe47fb69f81a
+guid: 6df7402e621df3e4fb4ba799c5c44e0b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7712084899799786552
-    second: ZC_Bishop_0
+      213: 4615369264781064854
+    second: Bishop_Color_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ZC_Bishop_0
+      name: Bishop_Color_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 70
-        width: 591
-        height: 832
+        x: 50
+        y: 75
+        width: 615
+        height: 825
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 83468322b54d60b60800000000000000
-      internalID: 7712084899799786552
+      spriteID: 69af78e94e51d0040800000000000000
+      internalID: 4615369264781064854
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: ea79dfa5178fc4c4da35f523b5594c5d
+    spriteID: 0c3025de95f60a148af4b99c882043f5
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ZC_Bishop_0: 7712084899799786552
+      Bishop_Color_0: 4615369264781064854
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

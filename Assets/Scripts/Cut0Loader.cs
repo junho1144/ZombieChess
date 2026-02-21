@@ -25,6 +25,6 @@ public class CutsceneController : MonoBehaviour
         Cut2.SetActive(true);
         yield return new WaitForSeconds(3f);
 
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Stage01");
     }
 }

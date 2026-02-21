@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0c5b548b1cfb1c042956fe47fb69f81a
+guid: ad646cbdd398b164b934f346a5371841
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7712084899799786552
-    second: ZC_Bishop_0
+      213: -4844620120803426131
+    second: Knight_Monster_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ZC_Bishop_0
+      name: Knight_Monster_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 70
-        width: 591
-        height: 832
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 121
+        y: 125
+        width: 607
+        height: 628
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 83468322b54d60b60800000000000000
-      internalID: 7712084899799786552
+      spriteID: da04dc30ba374ccb0800000000000000
+      internalID: -4844620120803426131
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: ea79dfa5178fc4c4da35f523b5594c5d
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ZC_Bishop_0: 7712084899799786552
+      Knight_Monster_0: -4844620120803426131
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

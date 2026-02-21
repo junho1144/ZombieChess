@@ -9,14 +9,35 @@ EditorBuildSettings:
     path: Assets/Scenes/StartScene.unity
     guid: 06151d5d0711e114d910c9da84dd6fcb
   - enabled: 1
+    path: Assets/Scenes/SettingScene.unity
+    guid: 9528eece65590244a9045f27a9f72e2f
+  - enabled: 1
     path: Assets/Scenes/Cutscene0.unity
     guid: 772709834b79ecf42b3f79a56648179a
   - enabled: 1
     path: Assets/Scenes/Stage01.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/SettingScene.unity
-    guid: 9528eece65590244a9045f27a9f72e2f
+    path: Assets/Scenes/Cutscene1.unity
+    guid: 9302bb4130e534c4883bc09429feb56b
+  - enabled: 1
+    path: Assets/Scenes/Stage02.unity
+    guid: e9c1902e8dc4d254285fac7275a8c9e0
+  - enabled: 1
+    path: Assets/Scenes/Cutscene2.unity
+    guid: 10dc480d889a42a4eba8a8a58a6cc538
+  - enabled: 1
+    path: Assets/Scenes/Stage03.unity
+    guid: c8bba7afde99b2a418b079ff9ddf2d1d
+  - enabled: 1
+    path: Assets/Scenes/Cutscene3.unity
+    guid: 6025bc047a94f0847886b8a403e80726
+  - enabled: 1
+    path: Assets/Scenes/Stage04.unity
+    guid: af2fd58121e6f96459fdb1477bf2bcfd
+  - enabled: 1
+    path: Assets/Scenes/Cutscene4.unity
+    guid: 4b4115c92f56c124bb5f433802c64a76
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

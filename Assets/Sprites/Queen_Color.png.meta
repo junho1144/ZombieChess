@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0c5b548b1cfb1c042956fe47fb69f81a
+guid: dd2b6c6b958e6dc4ab38217f44bba696
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7712084899799786552
-    second: ZC_Bishop_0
+      213: 5575021402385224238
+    second: Queen_Color_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ZC_Bishop_0
+      name: Queen_Color_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 70
-        width: 591
-        height: 832
+        x: 289
+        y: 87
+        width: 321
+        height: 726
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 83468322b54d60b60800000000000000
-      internalID: 7712084899799786552
+      spriteID: e221f508d647e5d40800000000000000
+      internalID: 5575021402385224238
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: ea79dfa5178fc4c4da35f523b5594c5d
+    spriteID: bfe1de54c41037b4a88fd8e7e25c3d2a
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ZC_Bishop_0: 7712084899799786552
+      Queen_Color_0: 5575021402385224238
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
