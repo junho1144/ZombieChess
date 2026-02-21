@@ -123,10 +123,10 @@ public class EnemyController : UnitBase
 
         if (bestMove != currentGridPos)
         {
-            currentGridPos = bestMove;
             Vector3 newWorldPos = GridManager.Instance.GetWorldPosition(bestMove.x, bestMove.y);
             newWorldPos.z = -1f;
             yield return JumpSpinMove(bestMove);
+            currentGridPos = bestMove;
         }
 
         // ★ 이동이 끝났으므로 타일 하이라이트를 모두 끕니다.

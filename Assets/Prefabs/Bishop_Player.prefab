@@ -82,9 +82,9 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 457301972330535220, guid: 8e9b7102e06e1c1439aa9dfe1bee3ec1, type: 3}
+  m_Sprite: {fileID: 7712084899799786552, guid: 0c5b548b1cfb1c042956fe47fb69f81a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 3.82, y: 6.45}
@@ -113,5 +113,12 @@ MonoBehaviour:
   heartSpacing: 0.1
   healthBarOffset: {x: 0, y: 0.6, z: 0}
   heartScale: 0.5
+  hitShakeDuration: 0.2
+  hitShakeAmount: 0.1
   currentGridPos: {x: 0, y: 0}
   currentState: 0
+  visualRoot: {fileID: 0}
+  moveDuration: 0.25
+  jumpHeight: 0.5
+  squashAmount: 0.75
+  squashDuration: 0.035

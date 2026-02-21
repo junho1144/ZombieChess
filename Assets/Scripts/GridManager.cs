@@ -18,17 +18,15 @@ public class GridManager : MonoBehaviour
     public GameObject tilePrefab; // 방금 만든 Tile 프리팹을 넣을 곳
     public int gridSize = 8;      // 8x8 체스판
 
-    [Header("타일 간격 조절")]
-    public float tileWidth = 1f;  // 마름모 타일의 가로 너비
-    public float tileHeight = 0.5f; // 마름모 타일의 세로 높이
-
-
     [Header("스테이지 배치 좌표")]
     // ★ 핵심 포인트 2: 기존의 단일 프리팹 변수를 지우고, 방금 만든 구조체의 리스트로 대체합니다.
     public List<CharacterSpawnInfo> playerSpawns = new List<CharacterSpawnInfo>();
     public List<CharacterSpawnInfo> enemySpawns = new List<CharacterSpawnInfo>();
 
     public Dictionary<Vector2Int, Vector3> tilePositions = new Dictionary<Vector2Int, Vector3>();
+
+    private float tileWidth = 10f;  // 마름모 타일의 가로 너비
+    private float tileHeight = 5f; // 마름모 타일의 세로 높이
 
     // ★ 1. 생성된 Tile 스크립트들을 모두 담아둘 딕셔너리 추가
     public Dictionary<Vector2Int, Tile> tileObjects = new Dictionary<Vector2Int, Tile>();
@@ -43,6 +41,8 @@ public class GridManager : MonoBehaviour
     {
         GenerateGrid();
         SpawnCharacters();
+        tileWidth = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.x;   // 타일 프리팹의 너비 정보를 Tile 스크립트에 전달
+        tileHeight = tilePrefab.GetComponent<SpriteRenderer>().bounds.size.y; // 타일 프리팹의 높이 정보를 Tile 스크립트에 전달
     }
 
     void GenerateGrid()

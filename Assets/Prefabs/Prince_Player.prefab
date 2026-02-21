@@ -110,8 +110,15 @@ MonoBehaviour:
   currentHP: 3
   maxHP: 3
   heartSprite: {fileID: 0}
-  heartSpacing: 0.1
-  healthBarOffset: {x: 0, y: 0.6, z: 0}
-  heartScale: 0.5
+  heartSpacing: 1
+  healthBarOffset: {x: 0, y: 6.5, z: 0}
+  heartScale: 3
+  hitShakeDuration: 0.2
+  hitShakeAmount: 0.1
   currentGridPos: {x: 0, y: 0}
   currentState: 0
+  visualRoot: {fileID: 0}
+  moveDuration: 0.25
+  jumpHeight: 0.5
+  squashAmount: 0.75
+  squashDuration: 0.035

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.SceneManagement;
 
 
 public class TurnManager : MonoBehaviour
@@ -16,6 +16,13 @@ public class TurnManager : MonoBehaviour
 
     // ★ 1. 현재 몇 번째 턴인지 추적하는 변수를 추가합니다. (1턴부터 시작)
     public int currentTurn = 1;
+
+    [Header("스테이지 UI 및 씬 설정")]
+    public GameObject victoryUI;       // 승리 시 띄울 UI 패널
+    public GameObject defeatUI;        // 패배 시 띄울 UI 패널
+    public string nextCutsceneName;    // 승리 후 이동할 다음 컷씬 씬의 이름
+
+    private bool isGameOver = false;
 
     private List<PlayerController> playerList = new List<PlayerController>();
     private List<EnemyController> enemyList = new List<EnemyController>();
@@ -40,6 +47,11 @@ public class TurnManager : MonoBehaviour
         playerList.Sort((a, b) => b.TurnPriority.CompareTo(a.TurnPriority));
         enemyList.Sort((a, b) => b.TurnPriority.CompareTo(a.TurnPriority));
 
+        // 게임 시작 시 UI가 켜져있다면 강제로 끕니다.
+        if (victoryUI != null) victoryUI.SetActive(false);
+        if (defeatUI != null) defeatUI.SetActive(false);
+        isGameOver = false;
+
         currentTurn = 1; // 게임 시작 시 1턴으로 초기화
         StartPlayerTurn(); // 기본적으로 아군 선 턴 시작
 
@@ -55,13 +67,58 @@ public class TurnManager : MonoBehaviour
     // ★ 기물이 죽었을 때 명단에서 빼주는 함수
     public void RemoveUnit(UnitBase unit, bool isPlayerTeam)
     {
+        if (isGameOver) return; // 이미 끝났으면 무시
+
         if (isPlayerTeam)
         {
             playerList.Remove(unit as PlayerController);
+            // 패배 조건: 아군이 한 명이라도 죽으면 즉시 패배
+            TriggerDefeat();
         }
         else
         {
             enemyList.Remove(unit as EnemyController);
+            // 승리 조건: 적 리스트가 0이 되면 승리
+            if (enemyList.Count == 0)
+            {
+                TriggerVictory();
+            }
+        }
+
+
+    }
+
+    private void TriggerVictory()
+    {
+        isGameOver = true;
+        Debug.Log("스테이지 클리어! 모든 적을 처치했습니다.");
+        if (victoryUI != null) victoryUI.SetActive(true);
+    }
+
+    private void TriggerDefeat()
+    {
+        isGameOver = true;
+        Debug.Log("스테이지 패배... 아군이 당했습니다.");
+        if (defeatUI != null) defeatUI.SetActive(true);
+    }
+
+    // ★ UI 버튼에서 호출할 재시작 함수
+    public void RetryStage()
+    {
+        // 현재 활성화된 씬을 다시 로드합니다.
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    // ★ UI 버튼에서 호출할 다음 컷씬 이동 함수
+    public void LoadNextCutscene()
+    {
+        if (!string.IsNullOrEmpty(nextCutsceneName))
+        {
+            SceneManager.LoadScene(nextCutsceneName);
+        }
+        else
+        {
+            Debug.LogWarning("다음 컷씬 이름이 설정되지 않았습니다!");
         }
     }
 

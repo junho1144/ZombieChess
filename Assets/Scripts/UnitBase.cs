@@ -23,9 +23,9 @@ public class UnitBase : MonoBehaviour
 
     [Header("UI 자동 생성 설정")]
     public Sprite heartSprite; // ★ 하트 이미지 딱 1개만 드래그 앤 드롭!
-    public float heartSpacing = 0.1f; // 하트 사이 간격
-    public Vector3 healthBarOffset = new Vector3(0, 0.6f, 0); // 캐릭터 머리 위 오프셋
-    public float heartScale = 0.5f; // 하트 크기
+    public float heartSpacing = 1f; // 하트 사이 간격
+    public Vector3 healthBarOffset = new Vector3(0, 1f, 0); // 캐릭터 머리 위 오프셋
+    public float heartScale = 10f; // 하트 크기
     [Header("모션 관련")]
     protected bool isShaking = false;
     public float hitShakeDuration = 0.2f;
@@ -230,6 +230,13 @@ public class UnitBase : MonoBehaviour
         // ★ 데미지를 입었을 때 UI를 갱신하여 오른쪽 하트를 끕니다.
         UpdateHealthUI();
         StartCoroutine(HitShake());
+
+        // ★ [추가] 아군의 피가 딱 1 남았을 때 이벤트 로그 출력
+        if (isPlayerTeam && currentHP == 1)
+        {
+            Debug.Log($"🚨 [이벤트] {gameObject.name}의 체력이 1 남았습니다! 위기 상황!");
+            // 추후 여기에 이벤트 컷씬 호출, 대사 출력 등의 코드를 넣으시면 됩니다.
+        }
 
         if (currentHP <= 0)
         {
