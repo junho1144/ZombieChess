@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9ce3ae203310cde47a0c255e4fc6f68d
+guid: c9f15a27450be7444bcd6ebf53929041
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5931446430189190302
-    second: ZC_knight_0
+      213: 6289360800600796559
+    second: FrameInCutscene_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ZC_knight_0
+      name: FrameInCutscene_0
       rect:
         serializedVersion: 2
-        x: 23
-        y: 70
-        width: 688
-        height: 600
-      alignment: 9
-      pivot: {x: 0.59102666, y: 0.004970411}
+        x: 54
+        y: 52
+        width: 920
+        height: 918
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 263805cd5e44fada0800000000000000
-      internalID: -5931446430189190302
+      spriteID: f8da310635c484750800000000000000
+      internalID: 6289360800600796559
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5d6b40a0e2744dd45bf544cdbf856b51
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ZC_knight_0: -5931446430189190302
+      FrameInCutscene_0: 6289360800600796559
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

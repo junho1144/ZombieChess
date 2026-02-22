@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: 9ce3ae203310cde47a0c255e4fc6f68d
+guid: af4289509c37dfc41923914f8a493ea1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5931446430189190302
-    second: ZC_knight_0
+      213: 3020553774173773340
+    second: Poon_Monster_0
+  - first:
+      213: -4580630587347900598
+    second: Poon_Monster_1
+  - first:
+      213: -8336486447328110067
+    second: Poon_Monster_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +119,67 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ZC_knight_0
+      name: Poon_Monster_0
       rect:
         serializedVersion: 2
-        x: 23
-        y: 70
-        width: 688
-        height: 600
+        x: 284
+        y: 141
+        width: 394
+        height: 471
       alignment: 9
-      pivot: {x: 0.59102666, y: 0.004970411}
+      pivot: {x: 0.50722337, y: 0.004851423}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 263805cd5e44fada0800000000000000
-      internalID: -5931446430189190302
+      spriteID: c1ed79e67a92be920800000000000000
+      internalID: 3020553774173773340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Poon_Monster_1
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 143
+        width: 395
+        height: 470
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a47e6d100c45e60c0800000000000000
+      internalID: -4580630587347900598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Poon_Monster_2
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 142
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0a5628aeb9de4c80800000000000000
+      internalID: -8336486447328110067
       vertices: []
       indices: 
       edges: []
@@ -138,7 +188,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5d6b40a0e2744dd45bf544cdbf856b51
+    spriteID: 2544c33b37508454397dcd92718595f1
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +198,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ZC_knight_0: -5931446430189190302
+      Poon_Monster_0: 3020553774173773340
+      Poon_Monster_1: -4580630587347900598
+      Poon_Monster_2: -8336486447328110067
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

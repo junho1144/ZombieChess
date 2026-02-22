@@ -32,7 +32,7 @@ public class Tile : MonoBehaviour, IPointerClickHandler
     // ★ 타일에 하이라이트 색상 입히기
     public void SetHighlight(Color highlightColor)
     {
-        if (spriteRenderer != null) spriteRenderer.color = highlightColor;
+        if (spriteRenderer != null) spriteRenderer.color = highlightColor * originalColor;
     }
 
 

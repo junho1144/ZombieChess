@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5931446430189190302, guid: 9ce3ae203310cde47a0c255e4fc6f68d, type: 3}
+  m_Sprite: {fileID: 7949298383115699443, guid: 92485f46798fcc44da74821698d5e805, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -110,6 +110,10 @@ MonoBehaviour:
   attackDamage: 1
   maxHP: 2
   currentHP: 2
+  heartSprite: {fileID: 0}
+  heartSpacing: 1
+  healthBarOffset: {x: 0, y: 5.6, z: 0}
+  heartScale: 3
   currentGridPos: {x: 0, y: 0}
   currentState: 0
   visualRoot: {fileID: 7214572570648561845}

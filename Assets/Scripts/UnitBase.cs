@@ -20,26 +20,25 @@ public class UnitBase : MonoBehaviour
     public int attackRange = 1; // 기본 공격 사거리
     public int attackDamage = 1;
 
-
-
     
     // ★ 체력 관련 변수 추가
     
     public int maxHP;
     public int currentHP;
 
-    /*
+    
     [Header("하트 크기, 위치, 간격")]
     public Sprite heartSprite; // ★ 하트 이미지 딱 1개만 드래그 앤 드롭!
     public float heartSpacing = 1f; // 하트 사이 간격
-    public Vector3 healthBarOffset = new Vector3(0, 1f, 0); // 캐릭터 머리 위 오프셋
-    public float heartScale = 10f; // 하트 크기
+    public Vector3 healthBarOffset = new Vector3(0, 6.5f, 0); // 캐릭터 머리 위 오프셋
+    public float heartScale = 3f; // 하트 크기
 
-    */
+    /*
     Sprite heartSprite; // ★ 하트 이미지 딱 1개만 드래그 앤 드롭!
     float heartSpacing = 1f; // 하트 사이 간격
     Vector3 healthBarOffset = new Vector3(0, 6.5f, 0); // 캐릭터 머리 위 오프셋
     float heartScale = 3f; // 하트 크기
+    */
 
     [Header("모션 관련")]
     protected bool isShaking = false;
@@ -139,14 +138,13 @@ public class UnitBase : MonoBehaviour
         }
     }
 
-    // ★ 핵심: 목표 좌표가 이 기물의 이동 규칙에 맞는지 검사하는 함수
+
     public bool IsValidMove(Vector2Int targetPos)
     {
-        // 제자리 이동은 불가능
-        if (currentGridPos == targetPos) return false;
-
-        // ★ [추가된 부분] 가려는 목적지에 아군이든 적군이든 이미 서 있다면 이동 불가!
-        if (TurnManager.Instance.GetUnitAt(targetPos) != null) return false;
+        // ★ [수정] 목적지가 내 현재 위치가 '아닐 때'만 겹침 검사를 합니다. 
+        // (그래야 제자리 클릭을 정상적인 타일로 인식할 수 있습니다)
+        if (currentGridPos != targetPos && TurnManager.Instance.GetUnitAt(targetPos) != null)
+            return false;
 
         int distX = Mathf.Abs(currentGridPos.x - targetPos.x);
         int distY = Mathf.Abs(currentGridPos.y - targetPos.y);
@@ -155,26 +153,27 @@ public class UnitBase : MonoBehaviour
         switch (pieceType)
         {
             case PieceType.Pawn:
-                return manhattanDist == 1;
+                return manhattanDist == 0 || manhattanDist == 1; // 0칸(제자리) 허용
 
             case PieceType.Prince:
-                return manhattanDist == 1 || manhattanDist == 2;
+                return manhattanDist == 0 || manhattanDist == 1 || manhattanDist == 2; // 0칸 허용
 
             case PieceType.Knight:
+                // ★ 나이트는 0칸(제자리) 유지 불가, 오직 1 또는 3만 가능!
                 return manhattanDist == 1 || manhattanDist == 3;
 
             case PieceType.Rook:
-                // X나 Y 중 하나가 같아야 상하좌우 직선 이동
-                // (나중에는 중간에 장애물이 있는지 검사하는 로직이 추가되어야 완벽해집니다)
+                // X와 Y가 모두 0인 경우(제자리)도 distX==0 조건에 맞아 자연스럽게 허용됨
                 return distX == 0 || distY == 0;
 
             case PieceType.Bishop:
+                // ★ 비숍 전용 함수 내부에 "아군 옆 1칸" 조건이 있으므로, 
+                // 제자리(0칸)일 때 내 옆에 아군이 있으면 true, 없으면 false가 자동으로 반환됩니다!
                 return IsValidBishopMove(targetPos);
 
             case PieceType.Boss:
-                return (distX == 0 || distY == 0 || distX == distY) && Mathf.Max(distX, distY) <= 2;
+                return manhattanDist == 0 || manhattanDist == 1; // 0칸 허용
         }
-    
 
         return false;
     }

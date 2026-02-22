@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7148689043077300946, guid: d708a69a97c0b4545a51338256d5b14c, type: 3}
+  m_Sprite: {fileID: 7620599306631131879, guid: 5ee7541cbca33a84a99452253f46dbb7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -107,19 +107,13 @@ MonoBehaviour:
   pieceType: 4
   isPlayerTeam: 1
   attackRange: 1
-  currentHP: 3
+  attackDamage: 1
   maxHP: 3
+  currentHP: 3
   heartSprite: {fileID: 0}
-  heartSpacing: 0.1
-  healthBarOffset: {x: 0, y: 0.6, z: 0}
-  heartScale: 0.5
-  hitShakeDuration: 0.2
-  hitShakeAmount: 0.1
-  shakeRoot: {fileID: 793671795023492906}
+  heartSpacing: 1
+  healthBarOffset: {x: 0, y: 7.5, z: 0}
+  heartScale: 3
   currentGridPos: {x: 0, y: 0}
   currentState: 0
   visualRoot: {fileID: 793671795023492906}
-  moveDuration: 0.25
-  jumpHeight: 2
-  squashAmount: 0.75
-  squashDuration: 0.035

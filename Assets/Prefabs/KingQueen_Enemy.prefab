@@ -109,8 +109,12 @@ MonoBehaviour:
   isPlayerTeam: 0
   attackRange: 1
   attackDamage: 2
-  maxHP: 4
-  currentHP: 4
+  maxHP: 3
+  currentHP: 3
+  heartSprite: {fileID: 0}
+  heartSpacing: 1
+  healthBarOffset: {x: 0, y: 7.5, z: 0}
+  heartScale: 3
   currentGridPos: {x: 0, y: 0}
   visualRoot: {fileID: 0}
 --- !u!114 &7310678506874214821
@@ -131,5 +135,9 @@ MonoBehaviour:
   attackDamage: 1
   maxHP: 0
   currentHP: 0
+  heartSprite: {fileID: 0}
+  heartSpacing: 1
+  healthBarOffset: {x: 0, y: 6.5, z: 0}
+  heartScale: 3
   currentGridPos: {x: 0, y: 0}
   visualRoot: {fileID: 0}

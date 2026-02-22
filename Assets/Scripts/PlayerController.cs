@@ -41,7 +41,7 @@ public class PlayerController : UnitBase
         {
             currentState = ActionState.WaitingToMove;
             Debug.Log($"{gameObject.name} ({pieceType}): 턴 시작! 이동할 타일을 클릭하거나, 이동 없이 제자리를 클릭하세요.");
-            ShowMovableTiles(Color.cyan);
+            ShowMovableTiles(new Color(0.6f,1f,1f,1f));
         }
         else
         {
@@ -92,6 +92,15 @@ public class PlayerController : UnitBase
 
         if (currentGridPos == targetPos)
         {
+            // ★ [추가] 현재 위치(제자리)로의 이동이 룰 상 허용되지 않는다면(나이트, 고립된 비숍 등) 행동을 넘길 수 없음!
+            if (!IsValidMove(targetPos))
+            {
+                Debug.Log($"{gameObject.name}: 제자리에서 대기할 수 없는 조건입니다! 반드시 다른 곳으로 이동하세요.");
+
+                // 에러 사운드가 있다면 여기서 재생해도 좋습니다.
+                return; // 클릭 무시, 턴 넘어가지 않음
+            }
+
             if (HasEnemyInRange())
             {
                 currentState = ActionState.WaitingToAttack;
@@ -107,6 +116,7 @@ public class PlayerController : UnitBase
             return;
         }
 
+        // 기존 이동 로직
         if (!IsValidMove(targetPos))
         {
             Debug.Log("이동 불가");
